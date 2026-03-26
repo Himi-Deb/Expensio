@@ -2,9 +2,9 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { CreditCard, Utensils, Car, ShoppingCart, Zap, Home, Plane } from 'lucide-react-native';
+import { Wallet, Utensils, Car, ShoppingCart, Zap, Home, Plane } from 'lucide-react-native';
 import { useState, useRef } from 'react';
-import { PanResponder, Animated } from 'react-native';
+import { PanResponder } from 'react-native';
 
 const MAX_BUDGET = 100000;
 const MIN_BUDGET = 0;
@@ -52,66 +52,83 @@ export default function CreateBudgetScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 48 }}>
 
         {/* Category Icon */}
-        <View style={[styles.heroIconWrap, { marginTop: 48, marginBottom: 20 }]}>
-          <View style={[styles.heroIconBox, { backgroundColor: colors.surfaceContainerHigh, borderRadius: 24 }]}>
-            <CreditCard color={colors.primary} size={28} />
+        <View style={{ alignItems: 'center', marginTop: 48, marginBottom: 20 }}>
+          <View style={{
+            width: 72,
+            height: 72,
+            backgroundColor: colors.primaryContainer,
+            borderRadius: 24,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Wallet color={colors.primary} size={30} />
           </View>
         </View>
 
         {/* Title */}
-        <Text style={[styles.title, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 28, letterSpacing: -0.5, textAlign: 'center' }]}>
+        <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 24, letterSpacing: -0.5, textAlign: 'center' }}>
           Create Budget
         </Text>
 
         {/* Budget Limit */}
-        <View style={[styles.section, { paddingHorizontal: spacing.xl, marginTop: 36 }]}>
-          <Text style={[styles.sectionLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2 }]}>
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 40, alignItems: 'center' }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.5 }}>
             BUDGET LIMIT
           </Text>
 
           {/* Amount Display */}
-          <View style={styles.amountRow}>
-            <Text style={[styles.currencySymbol, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 42 }]}>₹</Text>
-            <Text style={[styles.amountValue, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 52, letterSpacing: -2 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12, gap: 4 }}>
+            <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 40 }}>₹</Text>
+            <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 56, letterSpacing: -2 }}>
               {formatAmount(budgetValue)}
             </Text>
           </View>
 
           {/* Slider Track */}
           <View
-            style={[styles.sliderTrack, { backgroundColor: colors.surfaceContainerHighest, marginTop: 16 }]}
+            style={{
+              height: 4,
+              backgroundColor: colors.surfaceContainerHighest,
+              marginTop: 24,
+              width: '100%',
+              borderRadius: 2,
+              position: 'relative',
+            }}
             onLayout={(e) => setSliderWidth(e.nativeEvent.layout.width)}
             {...panResponder.panHandlers}
           >
             {/* Fill */}
-            <View style={[styles.sliderFill, { backgroundColor: colors.primary, width: `${progress * 100}%` }]} />
+            <View style={{ height: '100%', backgroundColor: colors.primary, borderRadius: 2, width: `${progress * 100}%` }} />
             {/* Thumb */}
             <View
-              style={[
-                styles.sliderThumb,
-                {
-                  backgroundColor: colors.primary,
-                  left: `${progress * 100}%`,
-                  shadowColor: colors.primary,
-                  shadowOffset: { width: 0, height: 0 },
-                  shadowOpacity: 0.6,
-                  shadowRadius: 10,
-                  elevation: 8,
-                },
-              ]}
+              style={{
+                position: 'absolute',
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+                top: -10,
+                marginLeft: -12,
+                backgroundColor: '#86FFD9',
+                left: `${progress * 100}%`,
+                shadowColor: colors.primary,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.8,
+                shadowRadius: 10,
+                elevation: 8,
+              }}
             />
           </View>
 
           {/* Min/Max labels */}
-          <View style={styles.sliderLabels}>
-            <Text style={[styles.sliderLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }]}>₹0</Text>
-            <Text style={[styles.sliderLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }]}>₹1,00,000</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 12 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }}>₹0</Text>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }}>₹1,00,000</Text>
           </View>
         </View>
 
         {/* Budget Name Input */}
-        <View style={[styles.section, { paddingHorizontal: spacing.xl, marginTop: 28 }]}>
-          <Text style={[styles.sectionLabel, { color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2, marginBottom: 12 }]}>
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 40 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2, marginBottom: 12 }}>
             BUDGET NAME
           </Text>
           <TextInput
@@ -119,32 +136,31 @@ export default function CreateBudgetScreen() {
             onChangeText={setBudgetName}
             placeholder="e.g. Monthly Groceries"
             placeholderTextColor={colors.onSurfaceVariant}
-            style={[styles.textInput, {
+            style={{
               color: colors.onSurface,
               fontFamily: 'Inter_400Regular',
-              fontSize: 16,
-              borderBottomColor: colors.outlineVariant,
+              fontSize: 18,
               paddingBottom: 12,
-            }]}
+            }}
           />
         </View>
 
         {/* Select Category */}
-        <View style={[styles.section, { paddingHorizontal: spacing.xl, marginTop: 28 }]}>
-          <View style={styles.categoryHeaderRow}>
-            <Text style={[styles.sectionLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2 }]}>
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 32 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2 }}>
               SELECT CATEGORY
             </Text>
             <TouchableOpacity>
-              <Text style={[styles.viewAll, { color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 13 }]}>View All</Text>
+              <Text style={{ color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 13 }}>View All</Text>
             </TouchableOpacity>
           </View>
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 14 }}
-            contentContainerStyle={{ gap: 10, paddingRight: spacing.xl }}
+            style={{ marginTop: 16 }}
+            contentContainerStyle={{ gap: 12, paddingRight: spacing.xl }}
           >
             {CATEGORIES.map((cat) => {
               const isSelected = selectedCategory === cat.id;
@@ -152,25 +168,24 @@ export default function CreateBudgetScreen() {
                 <TouchableOpacity
                   key={cat.id}
                   onPress={() => setSelectedCategory(cat.id)}
-                  style={[
-                    styles.categoryChip,
-                    {
-                      backgroundColor: isSelected ? colors.primary : colors.surfaceContainerHigh,
-                      borderRadius: borderRadius.full,
-                      paddingHorizontal: 16,
-                      paddingVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 8,
-                    },
-                  ]}
+                  style={{
+                    backgroundColor: isSelected ? colors.primaryContainer : colors.surfaceContainerLow,
+                    borderColor: isSelected ? colors.primary : 'transparent',
+                    borderWidth: 1,
+                    borderRadius: borderRadius.full,
+                    paddingHorizontal: 18,
+                    paddingVertical: 12,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
                 >
-                  <cat.icon color={isSelected ? colors.onPrimary : colors.onSurfaceVariant} size={16} />
-                  <Text style={[styles.categoryLabel, {
-                    color: isSelected ? colors.onPrimary : colors.onSurface,
+                  <cat.icon color={isSelected ? colors.primary : colors.onSurfaceVariant} size={16} />
+                  <Text style={{
+                    color: isSelected ? colors.primary : colors.onSurface,
                     fontFamily: 'Inter_500Medium',
                     fontSize: 14,
-                  }]}>
+                  }}>
                     {cat.label}
                   </Text>
                 </TouchableOpacity>
@@ -180,29 +195,29 @@ export default function CreateBudgetScreen() {
         </View>
 
         {/* Create Budget Button */}
-        <View style={[styles.actionsSection, { paddingHorizontal: spacing.xl, marginTop: 40 }]}>
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 48 }}>
           <TouchableOpacity
-            style={[styles.createBtn, {
-              backgroundColor: colors.primary,
-              borderRadius: borderRadius.full,
+            style={{
+              backgroundColor: '#86FFD9',
+              borderRadius: borderRadius.md,
               paddingVertical: 18,
               alignItems: 'center',
               shadowColor: colors.primary,
               shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.4,
+              shadowOpacity: 0.3,
               shadowRadius: 20,
               elevation: 10,
-            }]}
+            }}
             activeOpacity={0.85}
             onPress={() => router.back()}
           >
-            <Text style={[styles.createBtnText, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
+            <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>
               Create Budget
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
-            <Text style={[styles.cancelBtnText, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 15 }]}>
+          <TouchableOpacity style={{ alignItems: 'center', marginTop: 24 }} onPress={() => router.back()}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 15 }}>
               Cancel
             </Text>
           </TouchableOpacity>
@@ -214,68 +229,4 @@ export default function CreateBudgetScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  heroIconWrap: {
-    alignItems: 'center',
-  },
-  heroIconBox: {
-    width: 78,
-    height: 78,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {},
-  section: {},
-  sectionLabel: {},
-  amountRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 8,
-    gap: 4,
-  },
-  currencySymbol: {},
-  amountValue: {},
-  sliderTrack: {
-    height: 4,
-    borderRadius: 2,
-    position: 'relative',
-    overflow: 'visible',
-  },
-  sliderFill: {
-    height: '100%',
-    borderRadius: 2,
-  },
-  sliderThumb: {
-    position: 'absolute',
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    top: -10,
-    marginLeft: -12,
-  },
-  sliderLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  sliderLabel: {},
-  textInput: {
-    borderBottomWidth: 1,
-  },
-  categoryHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  viewAll: {},
-  categoryChip: {},
-  categoryLabel: {},
-  actionsSection: {},
-  createBtn: {},
-  createBtnText: {},
-  cancelBtn: {
-    alignItems: 'center',
-    marginTop: 18,
-    paddingBottom: 8,
-  },
-  cancelBtnText: {},
 });

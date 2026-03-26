@@ -112,8 +112,8 @@ export default function ActivityScreen() {
             ₹1,248.50
           </Text>
           <View style={styles.trendRow}>
-            <TrendingUp color="#FF5964" size={14} />
-            <Text style={[styles.trendText, { color: '#FF5964', fontFamily: 'Inter_500Medium', fontSize: 12, marginLeft: 5 }]}>
+            <TrendingUp color="#FF716C" size={14} />
+            <Text style={[styles.trendText, { color: '#FF716C', fontFamily: 'Inter_500Medium', fontSize: 12, marginLeft: 5 }]}>
               12% more than last month
             </Text>
           </View>

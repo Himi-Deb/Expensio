@@ -1,140 +1,184 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
-import { ChevronLeft, Wallet, ArrowRight } from 'lucide-react-native';
+import { ShieldCheck, Zap } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useRef } from 'react';
+
+const { height } = Dimensions.get('window');
 
 export default function SettleUpScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
+  
+  // Animation for the bottom sheet slide up effect
+  const translateY = useRef(new Animated.Value(height)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.spring(translateY, {
+        toValue: 0,
+        damping: 20,
+        stiffness: 90,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, []);
+
+  const closeBottomSheet = () => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: height,
+        duration: 200,
+        useNativeDriver: true,
+      })
+    ]).start(() => {
+      router.back();
+    });
+  };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { padding: spacing.lg }]}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <ChevronLeft color={colors.onSurface} size={24} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
-           Settle Up
-        </Text>
-        <View style={{ width: 24 }} />
-      </View>
+    <View style={styles.container}>
+      {/* Dark semi-transparent backdrop */}
+      <Animated.View style={[styles.backdrop, { opacity }]}>
+        <TouchableOpacity style={styles.backdropPress} onPress={closeBottomSheet} activeOpacity={1} />
+      </Animated.View>
 
-      <View style={[styles.content, { paddingHorizontal: spacing.xl }]}>
-        {/* Settlement Profile - High Editorial Impact */}
-        <View style={styles.profileSection}>
-           <View style={[styles.avatar, { backgroundColor: colors.surfaceContainerHighest }]}>
-              <Text style={[styles.avatarText, { color: colors.onSurface, fontFamily: 'Manrope_700Bold' }]}>R</Text>
-           </View>
-           
-           <Text style={[styles.settleSub, { color: colors.onSurfaceVariant, marginBottom: spacing.xs }]}>PAYING RAHUL</Text>
-           <Text style={[styles.mainAmount, { color: colors.onSurface, fontSize: 42, fontFamily: 'Manrope_700Bold', letterSpacing: -0.8 }]}>
-              ₹450.00
-           </Text>
-           <Text style={[styles.groupMeta, { color: colors.onSurfaceVariant, fontSize: 13, fontFamily: 'Inter_400Regular', marginTop: spacing.sm }]}>
-              Trip to Goa • Food & Travel
-           </Text>
-        </View>
-
-        {/* Bridge Context - Level 1 Tonal Layering */}
-        <View style={[styles.infoCard, { 
-          backgroundColor: colors.surfaceContainerLow, 
-          borderRadius: borderRadius.xl,
-          padding: spacing.xl,
-          marginBottom: spacing.xxl
-        }]}>
-          <View style={[styles.iconBox, { backgroundColor: 'white', borderRadius: borderRadius.md }]}>
-             <Wallet color={colors.primary} size={20} />
+      {/* Bottom Sheet Modal */}
+      <Animated.View style={[
+        styles.sheet, 
+        { 
+          backgroundColor: colors.surfaceContainerLow,
+          borderTopLeftRadius: borderRadius.xxl,
+          borderTopRightRadius: borderRadius.xxl,
+          transform: [{ translateY }]
+        }
+      ]}>
+        <SafeAreaView edges={['bottom']} style={{ width: '100%' }}>
+          {/* Drag Handle */}
+          <View style={styles.dragHandleOuter}>
+            <View style={[styles.dragHandle, { backgroundColor: colors.surfaceContainerHighest }]} />
           </View>
-          <View style={styles.infoText}>
-             <Text style={[styles.infoTitle, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 15, marginBottom: 4 }]}>
-                Bridge Auto-Sync
-             </Text>
-             <Text style={[styles.infoDesc, { color: colors.onSurfaceVariant, fontSize: 13, lineHeight: 18 }]}>
-                This payment will be categorized as <Text style={{ fontWeight: 'bold' }}>"Split Reimbursement"</Text> in your personal finance tracker.
-             </Text>
+
+          <View style={{ paddingHorizontal: spacing.xl, paddingBottom: spacing.xl, alignItems: 'center' }}>
+            
+            <Text style={[styles.subText, { color: colors.onSurfaceVariant, marginBottom: 8 }]}>Settling balance with</Text>
+            <Text style={[styles.nameText, { color: colors.onSurface, marginBottom: 40 }]}>Jessica Smith</Text>
+
+            <Text style={[styles.amountLabel, { color: colors.onSurfaceVariant, marginBottom: 4 }]}>AMOUNT DUE</Text>
+            <Text style={[styles.amountValue, { color: colors.primary, marginBottom: 40 }]}>₹450.00</Text>
+
+            <View style={[styles.secureRow, { marginBottom: 32 }]}>
+              <ShieldCheck color={colors.primary} size={16} />
+              <Text style={[styles.secureText, { color: colors.onSurfaceVariant }]}>Confirm UPI Payment</Text>
+            </View>
+
+            {/* Pay Button */}
+            <TouchableOpacity 
+              style={[
+                styles.payButton, 
+                { backgroundColor: colors.primary, borderRadius: borderRadius.xl }
+              ]}
+              onPress={closeBottomSheet}
+            >
+              <Text style={[styles.payText, { color: colors.background }]}>Pay via UPI </Text>
+              <Zap color={colors.background} size={18} fill={colors.background} />
+            </TouchableOpacity>
+
+            {/* Cancel Button */}
+            <TouchableOpacity onPress={closeBottomSheet} style={styles.cancelButton}>
+              <Text style={[styles.cancelText, { color: colors.onSurface }]}>Cancel</Text>
+            </TouchableOpacity>
+            
           </View>
-        </View>
-
-        <View style={{ flex: 1 }} />
-
-        {/* Premium Action Button */}
-        <TouchableOpacity 
-          style={[styles.settleButton, { 
-            backgroundColor: colors.primary, 
-            borderRadius: borderRadius.full,
-            paddingVertical: 18,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 12,
-            marginBottom: spacing.xl
-          }]}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.buttonText, { color: 'white', fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>
-             Pay via UPI
-          </Text>
-          <ArrowRight color="white" size={18} />
-        </TouchableOpacity>
-        
-        <Text style={[styles.secureNote, { color: colors.onSurfaceVariant, fontSize: 11, textAlign: 'center', marginBottom: spacing.lg }]}>
-           Securely settled via linked UPI apps
-        </Text>
-      </View>
-    </SafeAreaView>
+        </SafeAreaView>
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
-  title: {},
-  content: {
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  backdropPress: {
     flex: 1,
   },
-  profileSection: {
-    alignItems: 'center',
-    marginVertical: 48,
+  sheet: {
+    width: '100%',
+    minHeight: 400,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  dragHandleOuter: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 16,
+    marginBottom: 8,
+  },
+  dragHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+  },
+  subText: {
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+  },
+  nameText: {
+    fontSize: 24,
+    fontFamily: 'Manrope_700Bold',
+  },
+  amountLabel: {
+    fontSize: 10,
+    fontFamily: 'Inter_500Medium',
+    letterSpacing: 2,
+  },
+  amountValue: {
+    fontSize: 56,
+    fontFamily: 'Manrope_700Bold',
+    letterSpacing: -2,
+  },
+  secureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  secureText: {
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+  },
+  payButton: {
+    width: '100%',
+    paddingVertical: 18,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
   },
-  avatarText: {
-    fontSize: 32,
+  payText: {
+    fontSize: 18,
+    fontFamily: 'Manrope_700Bold',
   },
-  settleSub: {
-    fontSize: 10,
-    letterSpacing: 1.5,
-    fontFamily: 'Inter_500Medium',
+  cancelButton: {
+    paddingVertical: 12,
   },
-  mainAmount: {},
-  groupMeta: {},
-  infoCard: {
-    flexDirection: 'row',
-    gap: 16,
+  cancelText: {
+    fontSize: 16,
+    fontFamily: 'Manrope_700Bold',
   },
-  iconBox: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoText: {
-    flex: 1,
-  },
-  infoTitle: {},
-  infoDesc: {},
-  settleButton: {},
-  buttonText: {},
-  secureNote: {},
 });

@@ -4,205 +4,173 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import { useTheme } from '../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  ChevronLeft, Pencil, Utensils, Search, SlidersHorizontal,
-  Coffee, Sandwich, Pizza, ChevronRight, TrendingUp,
+  ChevronLeft, Utensils, Search,
+  Coffee, Sandwich, Pizza, ChevronRight, ArrowUpRight,
 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 
-const TRANSACTIONS = [
+// Grouped Mock Data
+const TRANSACTIONS_BY_DATE = [
   {
-    id: '1',
-    name: 'Starbucks',
-    time: '2:15 PM',
-    cat: 'Coffee & Drinks',
-    amt: '₹450.40',
-    icon: Coffee,
-    date: 'Today',
+    dateLabel: 'TODAY, OCT 24',
+    data: [
+      { id: '1', name: 'Blue Bottle Coffee', time: '8:45 AM', method: 'Apple Pay', amt: '-₹450.40', icon: Coffee },
+      { id: '2', name: 'Shake Shack', time: '1:15 PM', method: 'Credit Card', amt: '-₹850.00', icon: Sandwich },
+    ],
   },
   {
-    id: '2',
-    name: 'West Village Bistro',
-    time: 'Yesterday',
-    cat: 'Dinner',
-    amt: '₹1,200.00',
-    icon: Sandwich,
-    date: 'Yesterday',
-  },
-  {
-    id: '3',
-    name: 'Pizza Hut',
-    time: '12 Aug',
-    cat: 'Lunch Takeaway',
-    amt: '₹850.00',
-    icon: Pizza,
-    date: '12 Aug',
+    dateLabel: 'YESTERDAY, OCT 23',
+    data: [
+      { id: '3', name: 'The Rooftop Lounge', time: '8:30 PM', method: 'Debit Card', amt: '-₹3,400.00', icon: Pizza },
+    ],
   },
 ];
 
 export default function DiningTransactionsScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-  const [query, setQuery] = useState('');
-
-  const filtered = TRANSACTIONS.filter((t) =>
-    t.name.toLowerCase().includes(query.toLowerCase())
-  );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingHorizontal: spacing.md, paddingVertical: spacing.sm }]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.xl, paddingVertical: spacing.md }}>
         <TouchableOpacity onPress={() => router.back()}>
           <ChevronLeft color={colors.primary} size={26} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
-          Dining Transactions
+        <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>
+          Dining Out
         </Text>
         <TouchableOpacity>
-          <Pencil color={colors.primary} size={20} />
+          <Search color={colors.primary} size={22} />
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
 
-        {/* Hero */}
-        <View style={[styles.hero, { paddingTop: spacing.lg, paddingBottom: spacing.xl, alignItems: 'center' }]}>
-          <View style={[styles.heroIconBox, { backgroundColor: colors.surfaceContainerHigh, borderRadius: 20 }]}>
+        {/* Hero Section */}
+        <View style={{ alignItems: 'center', marginTop: 32, marginBottom: 32 }}>
+          <View style={{ width: 64, height: 64, backgroundColor: colors.primaryContainer, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <Utensils color={colors.primary} size={28} />
           </View>
-          <Text style={[styles.heroLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2, marginTop: 18, marginBottom: 4 }]}>
-            TOTAL SPENT
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.5, marginBottom: 8 }}>
+            TOTAL MONTHLY SPEND
           </Text>
-          <Text style={[styles.heroAmt, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 44, letterSpacing: -1.5 }]}>
-            ₹19,282
+          <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 44, letterSpacing: -1.5 }}>
+            ₹1,248.50
           </Text>
-          <View style={styles.trendRow}>
-            <Text style={[styles.trendRed, { color: colors.tertiary, fontFamily: 'Manrope_700Bold', fontSize: 13 }]}>
-              12% more{' '}
-            </Text>
-            <Text style={[styles.trendNormal, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13 }]}>
-              than last month
+          
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#3D1C1C', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full, marginTop: 12, gap: 6 }}>
+            <ArrowUpRight color="#FF716C" size={14} />
+            <Text style={{ color: '#FFACAC', fontFamily: 'Inter_500Medium', fontSize: 12 }}>
+              12% more than last month
             </Text>
           </View>
         </View>
 
-        {/* Search Bar */}
-        <View style={[styles.searchBar, {
-          backgroundColor: colors.surfaceContainerLow,
-          borderRadius: borderRadius.full,
-          marginHorizontal: spacing.lg,
-          marginBottom: spacing.xl,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: spacing.md,
-          paddingVertical: 12,
-          gap: 10,
-        }]}>
-          <Search color={colors.onSurfaceVariant} size={18} />
-          <TextInput
-            value={query}
-            onChangeText={setQuery}
-            placeholder="Search dining..."
-            placeholderTextColor={colors.onSurfaceVariant}
-            style={[styles.searchInput, {
-              flex: 1,
-              color: colors.onSurface,
-              fontFamily: 'Inter_400Regular',
-              fontSize: 15,
-            }]}
-          />
+        {/* Two Columns Stats */}
+        <View style={{ flexDirection: 'row', paddingHorizontal: spacing.xl, marginBottom: 40 }}>
+          {/* Frequent Vendor */}
+          <View style={{ flex: 1, borderRightWidth: 1, borderRightColor: colors.outline, paddingRight: 16 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
+              FREQUENT VENDOR
+            </Text>
+            <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
+              Blue Bottle
+            </Text>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 4 }}>
+              14 Visits
+            </Text>
+          </View>
+
+          {/* Average Tx */}
+          <View style={{ flex: 1, paddingLeft: 16 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
+              AVERAGE TRANSACTION
+            </Text>
+            <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
+              ₹42.30
+            </Text>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 4 }}>
+              Per transaction
+            </Text>
+          </View>
         </View>
 
-        {/* Recent History */}
-        <View style={[styles.sectionRow, { paddingHorizontal: spacing.lg, marginBottom: spacing.md }]}>
-          <Text style={[styles.sectionTitle, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }]}>
-            Recent History
+        {/* Recent Activity Header */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: spacing.xl, marginBottom: 16 }}>
+          <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }}>
+            Recent Activity
           </Text>
-          <TouchableOpacity>
-            <SlidersHorizontal color={colors.onSurfaceVariant} size={20} />
-          </TouchableOpacity>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13 }}>
+            October 2023
+          </Text>
         </View>
 
-        <View style={{ marginHorizontal: spacing.lg, gap: 2 }}>
-          {filtered.map((tx, idx) => (
-            <TouchableOpacity
-              key={tx.id}
-              activeOpacity={0.7}
-              onPress={() => router.push('/transaction-detail')}
-              style={[styles.txCard, {
-                backgroundColor: colors.surfaceContainerLow,
-                borderRadius: idx === 0 ? borderRadius.lg : idx === filtered.length - 1 ? borderRadius.lg : 0,
-                ...(idx === 0 && { borderTopLeftRadius: borderRadius.lg, borderTopRightRadius: borderRadius.lg, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }),
-                ...(idx === filtered.length - 1 && { borderBottomLeftRadius: borderRadius.lg, borderBottomRightRadius: borderRadius.lg, borderTopLeftRadius: 4, borderTopRightRadius: 4 }),
-                ...(idx > 0 && idx < filtered.length - 1 && { borderRadius: 4 }),
-                padding: spacing.md,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 14,
-                marginBottom: 2,
-              }]}
-            >
-              <View style={[styles.txIcon, { backgroundColor: colors.surfaceContainerHighest }]}>
-                <tx.icon color={colors.onSurfaceVariant} size={18} />
+        {/* List of Transactions */}
+        <View style={{ paddingHorizontal: spacing.xl, gap: 24 }}>
+          {TRANSACTIONS_BY_DATE.map((group) => (
+            <View key={group.dateLabel}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1, marginBottom: 12 }}>
+                {group.dateLabel}
+              </Text>
+              
+              <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.xl, overflow: 'hidden' }}>
+                {group.data.map((tx, idx) => (
+                  <View key={tx.id}>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ flexDirection: 'row', alignItems: 'center', padding: spacing.lg, gap: 14 }}
+                    >
+                      <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.surfaceContainerHighest, justifyContent: 'center', alignItems: 'center' }}>
+                        <tx.icon color={colors.onSurfaceVariant} size={20} />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
+                          {tx.name}
+                        </Text>
+                        <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13, marginTop: 2 }}>
+                          {tx.time} • {tx.method}
+                        </Text>
+                      </View>
+                      <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
+                        {tx.amt}
+                      </Text>
+                    </TouchableOpacity>
+                    {/* Divider except last item */}
+                    {idx < group.data.length - 1 && (
+                      <View style={{ height: 1, backgroundColor: colors.outline, marginLeft: 76 }} />
+                    )}
+                  </View>
+                ))}
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>
-                  {tx.name}
-                </Text>
-                <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 2 }]}>
-                  {tx.time} • {tx.cat}
-                </Text>
-              </View>
-              <View style={{ alignItems: 'flex-end', gap: 4 }}>
-                <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>
-                  {tx.amt}
-                </Text>
-                <ChevronRight color={colors.onSurfaceVariant} size={16} />
-              </View>
-            </TouchableOpacity>
+            </View>
           ))}
         </View>
 
-        {/* Spending Velocity */}
-        <View style={[styles.velocityCard, {
-          backgroundColor: colors.surfaceContainerLow,
-          marginHorizontal: spacing.lg,
-          marginTop: spacing.xxl,
-          borderRadius: borderRadius.xl,
-          overflow: 'hidden',
-        }]}>
-          {/* Subtle teal glow bg */}
-          <View style={[styles.velocityGlow, { backgroundColor: `${colors.primary}08` }]} />
-
-          <View style={{ padding: spacing.lg }}>
-            <View style={styles.velocityHeader}>
-              <Text style={[styles.velocityLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
-                MONTHLY FREQUENCY
-              </Text>
-              <View style={[styles.highBadge, { backgroundColor: `${colors.primary}20` }]}>
-                <Text style={[styles.highText, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 13 }]}>
-                  High
-                </Text>
-              </View>
-            </View>
-            <Text style={[styles.velocityBody, {
-              color: colors.onSurfaceVariant,
-              fontFamily: 'Inter_400Regular',
-              fontSize: 13,
-              lineHeight: 20,
-              marginTop: 12,
-            }]}>
-              You've visited{' '}
-              <Text style={{ color: colors.primary, fontFamily: 'Inter_500Medium' }}>14 dining spots</Text>{' '}
-              this month. This is 3 more than your average.
+        {/* Notice Card */}
+        <View style={{ marginHorizontal: spacing.xl, marginTop: 40, borderTopWidth: 1, borderTopColor: colors.outline, paddingTop: 32 }}>
+          <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8 }}>
+            Notice something wrong?
+          </Text>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, marginBottom: 20 }}>
+            We automatically group dining transactions. If your activity seems miscategorized, you can edit them.
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: colors.surfaceContainerHigh,
+              paddingVertical: 14,
+              borderRadius: borderRadius.lg,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 14 }}>
+              Bulk Edit Transactions
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>
@@ -212,66 +180,4 @@ export default function DiningTransactionsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerTitle: {},
-  hero: {},
-  heroIconBox: {
-    width: 68,
-    height: 68,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heroLabel: {},
-  heroAmt: {},
-  trendRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  trendRed: {},
-  trendNormal: {},
-  searchBar: {},
-  searchInput: {},
-  sectionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  sectionTitle: {},
-  txCard: {},
-  txIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  txName: {},
-  txMeta: {},
-  txAmt: {},
-  velocityCard: {},
-  velocityGlow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  velocityHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  velocityLabel: {},
-  highBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  highText: {},
-  velocityBody: {},
 });

@@ -18,13 +18,11 @@ export default function NewTransactionScreen() {
   const [amount, setAmount] = useState('');
   const [notes, setNotes] = useState('');
 
-  const displayAmount = amount || '0.00';
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingHorizontal: spacing.md, paddingVertical: spacing.sm }]}>
+      <View style={[styles.header, { paddingHorizontal: spacing.xl, paddingVertical: spacing.md }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
           <X color={colors.primary} size={22} />
         </TouchableOpacity>
@@ -32,98 +30,100 @@ export default function NewTransactionScreen() {
           New Transaction
         </Text>
         <TouchableOpacity>
-          <Text style={[styles.saveText, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>Save</Text>
+          <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>Save</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 48 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 48, marginTop: 16 }}>
 
         {/* Amount Section */}
-        <View style={[styles.amountSection, { paddingHorizontal: spacing.xl, paddingTop: spacing.xxl, paddingBottom: spacing.xl }]}>
-          <Text style={[styles.amountLabel, {
+        <View style={[styles.amountSection, { paddingHorizontal: spacing.xl, paddingBottom: spacing.xl }]}>
+          <Text style={{
             color: colors.onSurfaceVariant,
             fontFamily: 'Inter_500Medium',
             fontSize: 11,
             letterSpacing: 1.5,
             textAlign: 'center',
             marginBottom: 16,
-          }]}>
+          }}>
             AMOUNT
           </Text>
           <View style={styles.amountRow}>
-            <Text style={[styles.currencyGlyph, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 42 }]}>₹</Text>
+            <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 42 }}>₹</Text>
             <TextInput
               value={amount}
               onChangeText={setAmount}
               placeholder="0.00"
               placeholderTextColor={colors.surfaceContainerHighest}
               keyboardType="decimal-pad"
-              style={[styles.amountInput, {
+              style={{
                 color: colors.onSurface,
                 fontFamily: 'Manrope_700Bold',
-                fontSize: 56,
+                fontSize: 64,
                 letterSpacing: -2,
-              }]}
+                minWidth: 140,
+                textAlign: 'center',
+              }}
             />
           </View>
         </View>
 
-        {/* Form Fields */}
-        <View style={[styles.formSection, { paddingHorizontal: spacing.lg, gap: 10 }]}>
+        {/* Form Fields - Flat Structure */}
+        <View style={{ paddingHorizontal: spacing.xl, gap: 12, marginTop: 12 }}>
 
           {/* Category */}
-          <TouchableOpacity style={[styles.fieldCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.primaryContainer }]}>
-              <Utensils color={colors.primary} size={18} />
+          <View style={styles.flatFieldRow}>
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.primary }]}>
+              <Utensils color={colors.onPrimary} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 CATEGORY
               </Text>
-              <Text style={[styles.fieldValue, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }]}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
                 Dining
               </Text>
             </View>
-            <TouchableOpacity style={[styles.changeBtn, { backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 14, paddingVertical: 6 }]}>
-              <Text style={[styles.changeBtnText, { color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 12 }]}>Change</Text>
+            <TouchableOpacity style={{ backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 16, paddingVertical: 8 }}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 12 }}>Change</Text>
             </TouchableOpacity>
-          </TouchableOpacity>
+          </View>
 
           {/* Spent From */}
-          <TouchableOpacity style={[styles.fieldCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHighest }]}>
-              <CreditCard color={colors.onSurfaceVariant} size={18} />
+          <View style={styles.flatFieldRow}>
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+              <CreditCard color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 SPENT FROM
               </Text>
-              <Text style={[styles.fieldValue, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }]}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
                 Cash
               </Text>
             </View>
             <ChevronDown color={colors.onSurfaceVariant} size={20} />
-          </TouchableOpacity>
+          </View>
 
           {/* Date */}
-          <TouchableOpacity style={[styles.fieldCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHighest }]}>
-              <Calendar color={colors.onSurfaceVariant} size={18} />
+          <View style={styles.flatFieldRow}>
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+              <Calendar color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 DATE
               </Text>
-              <Text style={[styles.fieldValue, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }]}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
                 Today
               </Text>
             </View>
             <Calendar color={colors.onSurfaceVariant} size={18} />
-          </TouchableOpacity>
+          </View>
 
           {/* Notes */}
-          <View style={[styles.notesCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }]}>
+          <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.lg, marginTop: 8 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
               NOTES
             </Text>
             <TextInput
@@ -132,12 +132,12 @@ export default function NewTransactionScreen() {
               placeholder="What was this for?"
               placeholderTextColor={colors.onSurfaceVariant}
               multiline
-              style={[styles.notesInput, {
+              style={{
                 color: colors.onSurface,
                 fontFamily: 'Inter_400Regular',
                 fontSize: 15,
                 minHeight: 60,
-              }]}
+              }}
             />
           </View>
         </View>
@@ -145,9 +145,9 @@ export default function NewTransactionScreen() {
         {/* Split with Group CTA */}
         <TouchableOpacity
           style={[styles.splitBtn, {
-            backgroundColor: colors.primary,
-            borderRadius: borderRadius.full,
-            marginHorizontal: spacing.lg,
+            backgroundColor: '#86FFD9', // Bright mint from image
+            borderRadius: borderRadius.md,
+            marginHorizontal: spacing.xl,
             marginTop: 24,
             paddingVertical: 18,
             flexDirection: 'row',
@@ -156,35 +156,44 @@ export default function NewTransactionScreen() {
             gap: 10,
             shadowColor: colors.primary,
             shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.35,
-            shadowRadius: 16,
+            shadowOpacity: 0.2,
+            shadowRadius: 20,
             elevation: 10,
           }]}
           activeOpacity={0.85}
         >
           <Users color={colors.onPrimary} size={20} />
-          <Text style={[styles.splitBtnText, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>
+          <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
             Split with Group
           </Text>
         </TouchableOpacity>
 
         {/* Add Receipt / Image */}
         <TouchableOpacity
-          style={[styles.receiptCard, {
-            backgroundColor: colors.surfaceContainerLow,
+          style={{
+            borderColor: colors.outlineVariant,
+            borderWidth: 1.5,
+            borderStyle: 'dashed',
             borderRadius: borderRadius.lg,
-            marginHorizontal: spacing.lg,
-            marginTop: 12,
-            paddingVertical: 28,
+            marginHorizontal: spacing.xl,
+            marginTop: 16,
+            paddingVertical: 32,
             alignItems: 'center',
-            gap: 10,
-          }]}
+            gap: 12,
+          }}
           activeOpacity={0.7}
         >
-          <View style={[styles.cameraIconBox, { backgroundColor: colors.surfaceContainerHighest }]}>
-            <Camera color={colors.onSurfaceVariant} size={22} />
+          <View style={{
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            backgroundColor: colors.surfaceContainerHighest,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <Camera color={colors.onSurfaceVariant} size={20} />
           </View>
-          <Text style={[styles.receiptText, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 14 }]}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 14 }}>
             Add Receipt or Image
           </Text>
         </TouchableOpacity>
@@ -203,52 +212,30 @@ const styles = StyleSheet.create({
   },
   closeBtn: {},
   headerTitle: {},
-  saveText: {},
   amountSection: {
     alignItems: 'center',
   },
-  amountLabel: {},
   amountRow: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     gap: 4,
   },
-  currencyGlyph: {},
-  amountInput: {
-    minWidth: 120,
-  },
-  formSection: {},
-  fieldCard: {
+  flatFieldRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    gap: 14,
+    paddingVertical: 12,
+    gap: 16,
   },
   fieldIconBox: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
+    width: 48,
+    height: 48,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
   fieldBody: {
     flex: 1,
   },
-  fieldLabel: {},
-  fieldValue: {},
-  changeBtn: {},
-  changeBtnText: {},
-  notesCard: {},
-  notesInput: {},
   splitBtn: {},
-  splitBtnText: {},
-  receiptCard: {},
-  cameraIconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  receiptText: {},
 });
+

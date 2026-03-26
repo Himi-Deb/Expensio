@@ -13,7 +13,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.onSurfaceVariant,
         tabBarStyle: {
-          backgroundColor: '#151716', // surfaceContainerLow in Dark Neon
+          backgroundColor: '#1A1A1A', // surfaceContainerLow in Dark Neon
           borderTopWidth: 0,
           elevation: 0,
           height: 88,

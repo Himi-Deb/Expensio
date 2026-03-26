@@ -5,7 +5,7 @@ import {
   Manrope_400Regular,
   Manrope_500Medium,
   Manrope_600SemiBold,
-  Manrope_700Bold
+  Manrope_700Bold,
 } from '@expo-google-fonts/manrope';
 import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
@@ -32,6 +32,14 @@ export default function RootLayout() {
   return (
     <ThemeContext.Provider value={theme}>
       <Stack screenOptions={{ headerShown: false }}>
+        {/* Initial Entry — Onboarding */}
+        <Stack.Screen name="index" options={{ animation: 'fade' }} />
+        {/* Authentication flow */}
+        <Stack.Screen name="sign-in" options={{ animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="register" options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="reset-password" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="share" options={{ presentation: 'modal' }} />
+        {/* Main app */}
         <Stack.Screen name="(tabs)" />
         {/* Transaction flows */}
         <Stack.Screen name="new-transaction" options={{ presentation: 'modal' }} />
@@ -44,9 +52,15 @@ export default function RootLayout() {
         {/* Pickers / modals */}
         <Stack.Screen name="select-category" options={{ presentation: 'modal' }} />
         <Stack.Screen name="select-group" options={{ presentation: 'modal' }} />
-        {/* Legacy */}
+        
+        {/* Groups */}
+        <Stack.Screen name="group/[id]" options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="group/splits" options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="create-group" options={{ presentation: 'modal' }} />
+
+        {/* Overlays / Bottom Sheets */}
         <Stack.Screen name="add-expense" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="settle-up" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="settle-up" options={{ presentation: 'transparentModal', animation: 'slide_from_bottom' }} />
       </Stack>
     </ThemeContext.Provider>
   );

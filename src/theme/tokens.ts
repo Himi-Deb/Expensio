@@ -1,23 +1,23 @@
 export const tokens = {
   colors: {
-    primary: '#32FCB3',           // Neon Mint Green from the screenshots
+    primary: '#73FFE3',           // Primary-Brand-Color
     primaryContainer: '#123C2E',  // Dark tinted green for backgrounds
     onPrimary: '#000000',         // Black text on neon green
     
-    background: '#0B0D0C',        // Deepest black/grey for main app background
-    surface: '#0B0D0C',
+    background: '#0E0E0E',        // Primary-Background
+    surface: '#0E0E0E',
     
     // Tonal Layering Levels for Dark Mode
-    surfaceContainerLow: '#151716',      // Base card backgrounds
-    surfaceContainerHigh: '#1C1E1D',     // Elevated cards
-    surfaceContainerHighest: '#262827', // Highly elevated or selected
+    surfaceContainerLow: '#1A1A1A',      // Secondary-Background
+    surfaceContainerHigh: '#242424',     
+    surfaceContainerHighest: '#3F3E3E',  // Secondary-Grey
     surfaceContainerLowest: '#000000',  // Pure black
     
-    onSurface: '#FFFFFF',         // White text
-    onSurfaceVariant: '#8A918E',  // Muted grey text
+    onSurface: '#FFFFFF',         // Primary-Foreground
+    onSurfaceVariant: '#ADAAAA',  // Primary-Grey
     
-    tertiary: '#FF5964',          // Red for expenses / negative
-    outline: '#2A2E2C',           // Subtle borders if needed
+    tertiary: '#FF716C',          // Danger
+    outline: '#3F3E3E',           // Secondary-Grey
     outlineVariant: '#393E3C',
   },
   spacing: {

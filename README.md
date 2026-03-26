@@ -1,4 +1,4 @@
-# Expensio — Personal Finance Vault
+# Expensio - Finance Personalised
 
 > A premium dark-mode expense tracking mobile app built with React Native & Expo.
 
@@ -6,17 +6,11 @@ Expensio is a personal finance application that helps you track spending, manage
 
 ---
 
-## Screenshots
-
-| Home | Activity | Distribution | Transaction Detail |
-|------|----------|-------------|-------------------|
-| Vault card, budget overview, recent activity | Category drill-down with day-grouped transactions | SVG donut chart + category breakdown | Source SMS, notes & evidence |
-
 ---
 
 ## Features
 
-### 💳 Vault Dashboard
+### 💳 Track Expenses
 - **Total Spent card** — month-to-date spend with a unique Vault ID
 - **Budget cards** — create and track category budgets with progress bars
 - **Recent Activity** — live feed of the latest transactions with cleared/pending status badges

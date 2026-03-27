@@ -1,18 +1,25 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag } from 'lucide-react-native';
+import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useTransactions } from '../../src/context/TransactionContext';
+
+const IconMap: Record<string, any> = {
+  Coffee,
+  Car,
+  ShoppingBag,
+  Utensils,
+  Monitor,
+  Home,
+  Activity,
+  CircleDollarSign,
+};
 
 export default function DashboardScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-
-  const transactions = [
-    { name: 'Starbucks', cat: 'Dining Out', date: '2:15 PM', amt: '-₹450.40', status: 'CLEARED', icon: Coffee },
-    { name: 'Uber', cat: 'Transport', date: '11:30 AM', amt: '-₹840.85', status: 'PENDING', icon: Car },
-    { name: 'Apple Store', cat: 'Electronics', date: 'Yesterday', amt: '-₹94,900.00', status: 'CLEARED', icon: ShoppingBag },
-  ];
+  const { transactions, hasSmsConsent, setSmsConsent } = useTransactions();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -22,15 +29,15 @@ export default function DashboardScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <View style={[styles.avatarBox, { backgroundColor: colors.surfaceContainerHighest }]}>
-              <User color={colors.onSurfaceVariant} size={20} />
-            </View>
-            <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 20 }]}>
-              Vault
-            </Text>
-          </View>
-          <TouchableOpacity>
+          <TouchableOpacity style={[styles.avatarBox, { backgroundColor: colors.surfaceContainerHighest }]}>
+            <User color={colors.onSurfaceVariant} size={20} />
+          </TouchableOpacity>
+
+          <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'LeagueGothic_400Regular', fontSize: 34, textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }]}>
+            Expensio
+          </Text>
+
+          <TouchableOpacity style={styles.bellBtn}>
             <Bell color={colors.onSurface} size={24} />
           </TouchableOpacity>
         </View>
@@ -69,7 +76,7 @@ export default function DashboardScreen() {
               alignItems: 'center',
               gap: 8,
             }]}>
-              <Text style={{ color: colors.onPrimary, fontFamily: 'Inter_500Medium', fontSize: 12, letterSpacing: 0.5 }}>ANALYSIS</Text>
+              <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_500Medium', fontSize: 12, letterSpacing: 0.5 }}>ANALYSIS</Text>
               <ArrowRight color={colors.onPrimary} size={14} />
             </TouchableOpacity>
           </View>
@@ -80,7 +87,7 @@ export default function DashboardScreen() {
           <Text style={[styles.sectionTitle, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }]}>
             Budget
           </Text>
-          <Text style={[styles.sectionMeta, { color: colors.onSurfaceVariant, fontSize: 12, letterSpacing: 1, fontFamily: 'Inter_500Medium' }]}>
+          <Text style={[styles.sectionMeta, { color: colors.onSurfaceVariant, fontSize: 12, letterSpacing: 1, fontFamily: 'Manrope_500Medium' }]}>
             AUG 2024
           </Text>
         </View>
@@ -101,7 +108,7 @@ export default function DashboardScreen() {
             </View>
             <Text style={[styles.createBudgetText, {
               color: colors.onSurfaceVariant,
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Manrope_500Medium',
               fontSize: 11,
               marginTop: 14,
               letterSpacing: 1,
@@ -135,7 +142,7 @@ export default function DashboardScreen() {
             Recent Activity
           </Text>
           <TouchableOpacity>
-            <Text style={[styles.sectionAction, { color: colors.primary, fontSize: 12, letterSpacing: 1, fontFamily: 'Inter_500Medium' }]}>
+            <Text style={[styles.sectionAction, { color: colors.primary, fontSize: 12, letterSpacing: 1, fontFamily: 'Manrope_500Medium' }]}>
               VIEW ALL
             </Text>
           </TouchableOpacity>
@@ -143,32 +150,67 @@ export default function DashboardScreen() {
 
         {/* Activity List — standalone rows, no container card */}
         <View>
-          {transactions.map((tx, idx) => (
-            <View key={idx}>
-              <View style={[styles.txItem, { paddingVertical: 14 }]}>
-                <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
-                  <tx.icon color={colors.onSurfaceVariant} size={20} />
-                </View>
-                <View style={styles.txInfo}>
-                  <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
-                  <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.cat} • {tx.date}</Text>
-                </View>
-                <View style={styles.txAmounts}>
-                  <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>{tx.amt}</Text>
-                  <View style={[styles.txStatusBadge, {
-                    backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
-                  }]}>
-                    <Text style={[styles.txStatusText, {
-                      color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
-                    }]}>{tx.status}</Text>
-                  </View>
-                </View>
+          {transactions.length === 0 ? (
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 40 }}>
+              <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.surfaceContainerHigh, justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
+                <CircleDollarSign color={colors.onSurfaceVariant} size={28} />
               </View>
-              {idx < transactions.length - 1 && (
-                <View style={[styles.separator, { backgroundColor: colors.outline }]} />
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
+                {hasSmsConsent === false ? "No recent activity found" : "Scan for recent transactions"}
+              </Text>
+
+              {hasSmsConsent === false && (
+                <TouchableOpacity 
+                  onPress={() => setSmsConsent(true)}
+                  style={{ backgroundColor: colors.surfaceContainerHighest, paddingHorizontal: 20, paddingVertical: 12, borderRadius: borderRadius.full, marginTop: 12, marginBottom: 24 }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={{ color: colors.primary, fontFamily: 'Manrope_600SemiBold', fontSize: 13, letterSpacing: 0.5 }}>
+                    SCAN MESSAGES FOR ACTIVITY
+                  </Text>
+                </TouchableOpacity>
               )}
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'transparent', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full }}>
+                <ShieldCheck color={colors.primary} size={14} />
+                <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>
+                  Protected & Private
+                </Text>
+              </View>
             </View>
-          ))}
+          ) : (
+            transactions.map((tx, idx) => {
+              const IconComponent = IconMap[tx.iconName] || CircleDollarSign;
+              return (
+                <View key={tx.id}>
+                  <View style={[styles.txItem, { paddingVertical: 14 }]}>
+                    <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+                      <IconComponent color={colors.onSurfaceVariant} size={20} />
+                    </View>
+                    <View style={styles.txInfo}>
+                      <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
+                      <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.category} • {tx.date}</Text>
+                    </View>
+                    <View style={styles.txAmounts}>
+                      <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>
+                        {tx.amount < 0 ? `-₹${Math.abs(tx.amount).toFixed(2)}` : `+₹${tx.amount.toFixed(2)}`}
+                      </Text>
+                      <View style={[styles.txStatusBadge, {
+                        backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
+                      }]}>
+                        <Text style={[styles.txStatusText, {
+                          color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
+                        }]}>{tx.status}</Text>
+                      </View>
+                    </View>
+                  </View>
+                  {idx < transactions.length - 1 && (
+                    <View style={[styles.separator, { backgroundColor: colors.outline }]} />
+                  )}
+                </View>
+              );
+            })
+          )}
         </View>
       </ScrollView>
 
@@ -176,7 +218,7 @@ export default function DashboardScreen() {
       <TouchableOpacity
         style={[styles.fab, {
           backgroundColor: colors.primary,
-          borderRadius: borderRadius.full,
+          borderRadius: 20, /* Squircle */
           shadowColor: colors.primary,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.4,
@@ -200,11 +242,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 28,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
   avatarBox: {
     width: 38,
     height: 38,
@@ -212,7 +249,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  vaultTitle: {},
+  bellBtn: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  vaultTitle: {
+    flex: 1, // dynamically fills the center gap ensuring the text sits perfectly aligned
+  },
   mainCard: {},
   cardHeaderRow: {
     flexDirection: 'row',
@@ -221,7 +266,7 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1.2,
   },
   mainBalance: {},
@@ -233,7 +278,7 @@ const styles = StyleSheet.create({
   },
   vaultIdLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1.2,
   },
   vaultIdData: {},
@@ -316,7 +361,7 @@ const styles = StyleSheet.create({
   },
   txStatusText: {
     fontSize: 8,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 0.8,
   },
   separator: {

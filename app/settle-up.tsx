@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     fontSize: 14,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   nameText: {
     fontSize: 24,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   amountLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 2,
   },
   amountValue: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   secureText: {
     fontSize: 14,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   payButton: {
     width: '100%',

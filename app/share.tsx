@@ -45,8 +45,8 @@ export default function ShareScreen() {
         }]}>
           <View style={[styles.qrInnerWhiteBox, { backgroundColor: 'white' }]}>
             <View style={{ width: 140, height: 140, backgroundColor: '#E5E7EB', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontFamily: 'Inter_700Bold', color: '#111827' }}>QR CODE</Text>
-              <Text style={{ fontSize: 10, marginTop: 4, fontFamily: 'Inter_400Regular', color: '#6B7280' }}>Safe for work</Text>
+              <Text style={{ fontFamily: 'Manrope_700Bold', color: '#111827' }}>QR CODE</Text>
+              <Text style={{ fontSize: 10, marginTop: 4, fontFamily: 'Manrope_400Regular', color: '#6B7280' }}>Safe for work</Text>
             </View>
           </View>
           <Text style={[styles.qrLabel, { color: colors.onSurfaceVariant }]}>PERSONAL INVITE CODE</Text>
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 14,
   },
   qrOuterBox: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   qrLabel: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 11,
     letterSpacing: 2,
   },
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   urlText: {
     flex: 1,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 15,
   },
   mainButton: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   trackerSub: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 13,
   },
   trackerFraction: {
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   sectionDividerText: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 11,
     letterSpacing: 2,
     marginBottom: 32,
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   socialIconText: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 10,
     letterSpacing: 1,
   },
@@ -325,12 +325,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 11,
     letterSpacing: 2,
   },
   viewAllText: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 11,
     letterSpacing: 1,
   },
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   referralDate: {
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     fontSize: 10,
     letterSpacing: 1,
   },

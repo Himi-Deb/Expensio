@@ -1,12 +1,71 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Shield, Mail, Lock, Eye } from 'lucide-react-native';
+import { Shield, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react-native';
+import { useState } from 'react';
+import { handleOAuthLogin, loginUser } from '../src/services/auth';
 
 export default function SignInScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
+
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState<string | null>(null);
+
+  const handleEmailSignIn = async () => {
+    const cleanId = identifier.trim();
+    if (!cleanId || !password) {
+      setErrorText('Please fill out all fields.');
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorText('Password must be at least 8 characters long.');
+      return;
+    }
+
+    setErrorText(null);
+    setIsLoading(true);
+
+    try {
+      const response = await loginUser({ identifier: cleanId, password });
+
+      if (response.success) {
+        // Bypass native callbacks and push securely
+        router.replace('/(tabs)');
+      } else {
+        setErrorText(response.message || 'Invalid credentials.');
+      }
+    } catch (err) {
+      setErrorText('An unexpected network error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'facebook') => {
+    setErrorText(null);
+    setIsLoading(true);
+
+    try {
+      const response = await handleOAuthLogin(provider, `mock_${provider}_token_123`);
+
+      if (response.success) {
+        router.replace('/(tabs)');
+      } else {
+        setErrorText(response.message || 'Social authentication failed.');
+      }
+    } catch (err) {
+      setErrorText(`Failed to connect to ${provider === 'google' ? 'Google' : 'Facebook'}.`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -29,6 +88,13 @@ export default function SignInScreen() {
 
           {/* Form */}
           <View style={styles.formSection}>
+            {errorText && (
+              <View style={[styles.errorBox, { backgroundColor: 'rgba(255, 113, 108, 0.1)', borderColor: colors.error }]}>
+                <AlertCircle color={colors.error} size={16} />
+                <Text style={[styles.errorText, { color: colors.error }]}>{errorText}</Text>
+              </View>
+            )}
+
             <View style={[styles.inputGroup, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
               <Mail color={colors.onSurfaceVariant} size={20} />
               <TextInput 
@@ -37,6 +103,9 @@ export default function SignInScreen() {
                 placeholderTextColor={colors.onSurfaceVariant}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                value={identifier}
+                onChangeText={setIdentifier}
+                editable={!isLoading}
               />
             </View>
 
@@ -46,10 +115,17 @@ export default function SignInScreen() {
                 style={[styles.input, { color: colors.onSurface }]}
                 placeholder="Password"
                 placeholderTextColor={colors.onSurfaceVariant}
-                secureTextEntry
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+                editable={!isLoading}
               />
-              <TouchableOpacity>
-                <Eye color={colors.onSurfaceVariant} size={20} />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} disabled={isLoading}>
+                {showPassword ? (
+                  <EyeOff color={colors.onSurfaceVariant} size={20} />
+                ) : (
+                  <Eye color={colors.onSurfaceVariant} size={20} />
+                )}
               </TouchableOpacity>
             </View>
 
@@ -61,11 +137,20 @@ export default function SignInScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={[styles.mainButton, { backgroundColor: colors.primary, borderRadius: borderRadius.xl }]}
-              onPress={() => router.push('/(tabs)')}
+              style={[
+                styles.mainButton, 
+                { backgroundColor: colors.primary, borderRadius: borderRadius.xl },
+                isLoading && { opacity: 0.7 }
+              ]}
+              onPress={handleEmailSignIn}
               activeOpacity={0.8}
+              disabled={isLoading}
             >
-              <Text style={[styles.mainButtonText, { color: colors.background }]}>Sign In</Text>
+              {isLoading ? (
+                <ActivityIndicator color={colors.background} size="small" />
+              ) : (
+                <Text style={[styles.mainButtonText, { color: colors.background }]}>Sign In</Text>
+              )}
             </TouchableOpacity>
           </View>
 
@@ -74,12 +159,20 @@ export default function SignInScreen() {
             <Text style={[styles.dividerText, { color: colors.onSurfaceVariant }]}>OR CONTINUE WITH</Text>
             
             <View style={styles.socialRow}>
-              <TouchableOpacity style={[styles.socialBtn, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
+              <TouchableOpacity 
+                style={[styles.socialBtn, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}
+                disabled={isLoading}
+                onPress={() => handleSocialLogin('google')}
+              >
                 {/* SVG for Google would go here, using text layout for precise match */}
                 <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>G <Text style={[styles.socialText, { color: colors.onSurface }]}> Google</Text></Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.socialBtn, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
+              <TouchableOpacity 
+                style={[styles.socialBtn, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}
+                disabled={isLoading}
+                onPress={() => handleSocialLogin('facebook')}
+              >
                 {/* SVG for Facebook would go here */}
                 <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>f <Text style={[styles.socialText, { color: colors.onSurface }]}> Facebook</Text></Text>
               </TouchableOpacity>
@@ -138,8 +231,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 14,
+  },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+    gap: 8,
+  },
+  errorText: {
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 13,
+    flex: 1,
   },
   formSection: {
     marginBottom: 40,
@@ -154,7 +261,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 15,
   },
   forgotBtn: {
@@ -183,7 +290,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dividerText: {
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 10,
     letterSpacing: 2,
     marginBottom: 24,
@@ -209,7 +316,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   footerText: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 14,
   },
   linkText: {

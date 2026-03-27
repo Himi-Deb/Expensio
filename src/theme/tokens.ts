@@ -17,6 +17,7 @@ export const tokens = {
     onSurfaceVariant: '#ADAAAA',  // Primary-Grey
     
     tertiary: '#FF716C',          // Danger
+    error: '#FF716C',             // Form Error State
     outline: '#3F3E3E',           // Secondary-Grey
     outlineVariant: '#393E3C',
   },
@@ -45,10 +46,10 @@ export const tokens = {
       fontFamily: 'Manrope_600SemiBold',
     },
     body: {
-      fontFamily: 'Inter_400Regular',
+      fontFamily: 'Manrope_400Regular',
     },
     label: {
-      fontFamily: 'Inter_500Medium',
+      fontFamily: 'Manrope_500Medium',
       letterSpacing: 1, // Useful for the uppercase subheadings in the design
     }
   }

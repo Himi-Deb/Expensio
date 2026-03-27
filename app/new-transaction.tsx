@@ -9,14 +9,53 @@ import {
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { X, Utensils, CreditCard, Calendar, Camera, Users, ChevronDown } from 'lucide-react-native';
-import { useState } from 'react';
+import { X, Utensils, CreditCard, Calendar, Camera, Users, ChevronDown, Coffee, Car, ShoppingBag, Monitor, Home, Activity as ActivityIcon, CircleDollarSign } from 'lucide-react-native';
+import { useState, useEffect } from 'react';
+import { useTransactions } from '../src/context/TransactionContext';
+import { autoCategorizeTransaction, TransactionIcon } from '../src/utils/categorization';
+
+const IconMap: Record<TransactionIcon, any> = {
+  Coffee,
+  Car,
+  ShoppingBag,
+  Utensils,
+  Monitor,
+  Home,
+  Activity: ActivityIcon,
+  CircleDollarSign,
+};
 
 export default function NewTransactionScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
+  const { addTransaction } = useTransactions();
+  
   const [amount, setAmount] = useState('');
-  const [notes, setNotes] = useState('');
+  const [merchantName, setMerchantName] = useState('');
+  const [category, setCategory] = useState('General');
+  const [iconName, setIconName] = useState<TransactionIcon>('CircleDollarSign');
+
+  // Intelligent Categorizer Map
+  useEffect(() => {
+    const { category: newCat, iconName: newIcon } = autoCategorizeTransaction(merchantName);
+    setCategory(newCat);
+    setIconName(newIcon);
+  }, [merchantName]);
+
+  const handleSave = () => {
+    if (!amount || isNaN(Number(amount))) return;
+    
+    addTransaction({
+      name: merchantName || 'Unknown',
+      amount: -Math.abs(Number(amount)), // Assuming debit for prototyping
+      category,
+      iconName,
+      date: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      status: 'CLEARED'
+    });
+    
+    router.back();
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -29,7 +68,7 @@ export default function NewTransactionScreen() {
         <Text style={[styles.headerTitle, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
           New Transaction
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSave}>
           <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -40,7 +79,7 @@ export default function NewTransactionScreen() {
         <View style={[styles.amountSection, { paddingHorizontal: spacing.xl, paddingBottom: spacing.xl }]}>
           <Text style={{
             color: colors.onSurfaceVariant,
-            fontFamily: 'Inter_500Medium',
+            fontFamily: 'Manrope_500Medium',
             fontSize: 11,
             letterSpacing: 1.5,
             textAlign: 'center',
@@ -74,18 +113,21 @@ export default function NewTransactionScreen() {
           {/* Category */}
           <View style={styles.flatFieldRow}>
             <View style={[styles.fieldIconBox, { backgroundColor: colors.primary }]}>
-              <Utensils color={colors.onPrimary} size={18} />
+              {(() => {
+                const CurrentIcon = IconMap[iconName] || CircleDollarSign;
+                return <CurrentIcon color={colors.onPrimary} size={18} />;
+              })()}
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 CATEGORY
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
-                Dining
+                {category}
               </Text>
             </View>
             <TouchableOpacity style={{ backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 16, paddingVertical: 8 }}>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 12 }}>Change</Text>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>Change</Text>
             </TouchableOpacity>
           </View>
 
@@ -95,7 +137,7 @@ export default function NewTransactionScreen() {
               <CreditCard color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 SPENT FROM
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
@@ -111,7 +153,7 @@ export default function NewTransactionScreen() {
               <Calendar color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 DATE
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
@@ -121,22 +163,21 @@ export default function NewTransactionScreen() {
             <Calendar color={colors.onSurfaceVariant} size={18} />
           </View>
 
-          {/* Notes */}
+          {/* Title / Merchant */}
           <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.lg, marginTop: 8 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
-              NOTES
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
+              MERCHANT / TITLE
             </Text>
             <TextInput
-              value={notes}
-              onChangeText={setNotes}
-              placeholder="What was this for?"
+              value={merchantName}
+              onChangeText={setMerchantName}
+              placeholder="Who did you pay?"
               placeholderTextColor={colors.onSurfaceVariant}
-              multiline
               style={{
                 color: colors.onSurface,
-                fontFamily: 'Inter_400Regular',
-                fontSize: 15,
-                minHeight: 60,
+                fontFamily: 'Manrope_600SemiBold',
+                fontSize: 16,
+                minHeight: 40,
               }}
             />
           </View>
@@ -193,7 +234,7 @@ export default function NewTransactionScreen() {
           }}>
             <Camera color={colors.onSurfaceVariant} size={20} />
           </View>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 14 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 14 }}>
             Add Receipt or Image
           </Text>
         </TouchableOpacity>

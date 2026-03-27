@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     marginBottom: 4,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   groupMeta: {
     fontSize: 12,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   groupBalance: {
     alignItems: 'flex-end',

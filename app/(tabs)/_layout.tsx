@@ -1,10 +1,12 @@
 import { Tabs } from 'expo-router';
 import { useTheme } from '../../src/theme/theme';
 import { Home, Activity, Users, User } from 'lucide-react-native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const { colors, borderRadius } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -16,8 +18,8 @@ export default function TabLayout() {
           backgroundColor: '#1A1A1A', // surfaceContainerLow in Dark Neon
           borderTopWidth: 0,
           elevation: 0,
-          height: 88,
-          paddingBottom: 28,
+          height: Platform.OS === 'ios' ? 88 : 78,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 12,
           paddingTop: 12,
           borderTopLeftRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,
@@ -27,7 +29,7 @@ export default function TabLayout() {
           right: 0,
         },
         tabBarLabelStyle: {
-          fontFamily: 'Inter_500Medium',
+          fontFamily: 'Manrope_500Medium',
           fontSize: 10,
           letterSpacing: 0.5,
           marginTop: 4,
@@ -59,6 +61,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          href: null,
           title: 'Me',
           tabBarIcon: ({ color }) => <User color={color} size={22} />,
         }}

@@ -23,11 +23,8 @@ export default function DashboardScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={[styles.avatarBox, { backgroundColor: colors.surfaceContainerHighest }]}>
-              <User color={colors.onSurfaceVariant} size={20} />
-            </View>
-            <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 20 }]}>
-              Vault
+            <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'LeagueGothic_400Regular', fontSize: 48, textTransform: 'uppercase', letterSpacing: 1 }]}>
+              Expensio
             </Text>
           </View>
           <TouchableOpacity>
@@ -176,7 +173,7 @@ export default function DashboardScreen() {
       <TouchableOpacity
         style={[styles.fab, {
           backgroundColor: colors.primary,
-          borderRadius: borderRadius.full,
+          borderRadius: 20, /* Squircle */
           shadowColor: colors.primary,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.4,

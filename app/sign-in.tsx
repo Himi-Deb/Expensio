@@ -18,7 +18,8 @@ export default function SignInScreen() {
   const [errorText, setErrorText] = useState<string | null>(null);
 
   const handleEmailSignIn = async () => {
-    if (!identifier || !password) {
+    const cleanId = identifier.trim();
+    if (!cleanId || !password) {
       setErrorText('Please fill out all fields.');
       return;
     }
@@ -32,12 +33,11 @@ export default function SignInScreen() {
     setIsLoading(true);
 
     try {
-      const response = await loginUser({ identifier, password });
+      const response = await loginUser({ identifier: cleanId, password });
 
       if (response.success) {
-        Alert.alert("Success", response.message || "Logged in successfully!", [
-          { text: "Awesome!", onPress: () => router.push('/(tabs)') }
-        ]);
+        // Bypass native callbacks and push securely
+        router.replace('/(tabs)');
       } else {
         setErrorText(response.message || 'Invalid credentials.');
       }
@@ -56,9 +56,7 @@ export default function SignInScreen() {
       const response = await handleOAuthLogin(provider, `mock_${provider}_token_123`);
 
       if (response.success) {
-        Alert.alert("Success", response.message || `Connected to ${provider}!`, [
-          { text: "Awesome!", onPress: () => router.push('/(tabs)') }
-        ]);
+        router.replace('/(tabs)');
       } else {
         setErrorText(response.message || 'Social authentication failed.');
       }

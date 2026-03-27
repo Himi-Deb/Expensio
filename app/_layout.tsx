@@ -7,6 +7,10 @@ import {
   Manrope_600SemiBold,
   Manrope_700Bold,
 } from '@expo-google-fonts/manrope';
+import {
+  useFonts as useLeagueGothicFonts,
+  LeagueGothic_400Regular,
+} from '@expo-google-fonts/league-gothic';
 
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -19,6 +23,7 @@ export default function RootLayout() {
     Manrope_500Medium,
     Manrope_600SemiBold,
     Manrope_700Bold,
+    LeagueGothic_400Regular,
   });
 
   useEffect(() => {

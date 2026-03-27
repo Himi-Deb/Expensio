@@ -18,8 +18,8 @@ export default function TabLayout() {
           backgroundColor: '#1A1A1A', // surfaceContainerLow in Dark Neon
           borderTopWidth: 0,
           elevation: 0,
-          height: 64 + insets.bottom,
-          paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          height: Platform.OS === 'ios' ? 88 : 78,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 12,
           paddingTop: 12,
           borderTopLeftRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,

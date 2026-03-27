@@ -1,18 +1,25 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag } from 'lucide-react-native';
+import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useTransactions } from '../../src/context/TransactionContext';
+
+const IconMap: Record<string, any> = {
+  Coffee,
+  Car,
+  ShoppingBag,
+  Utensils,
+  Monitor,
+  Home,
+  Activity,
+  CircleDollarSign,
+};
 
 export default function DashboardScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-
-  const transactions = [
-    { name: 'Starbucks', cat: 'Dining Out', date: '2:15 PM', amt: '-₹450.40', status: 'CLEARED', icon: Coffee },
-    { name: 'Uber', cat: 'Transport', date: '11:30 AM', amt: '-₹840.85', status: 'PENDING', icon: Car },
-    { name: 'Apple Store', cat: 'Electronics', date: 'Yesterday', amt: '-₹94,900.00', status: 'CLEARED', icon: ShoppingBag },
-  ];
+  const { transactions } = useTransactions();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -143,32 +150,54 @@ export default function DashboardScreen() {
 
         {/* Activity List — standalone rows, no container card */}
         <View>
-          {transactions.map((tx, idx) => (
-            <View key={idx}>
-              <View style={[styles.txItem, { paddingVertical: 14 }]}>
-                <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
-                  <tx.icon color={colors.onSurfaceVariant} size={20} />
-                </View>
-                <View style={styles.txInfo}>
-                  <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
-                  <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.cat} • {tx.date}</Text>
-                </View>
-                <View style={styles.txAmounts}>
-                  <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>{tx.amt}</Text>
-                  <View style={[styles.txStatusBadge, {
-                    backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
-                  }]}>
-                    <Text style={[styles.txStatusText, {
-                      color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
-                    }]}>{tx.status}</Text>
-                  </View>
-                </View>
+          {transactions.length === 0 ? (
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 40 }}>
+              <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.surfaceContainerHigh, justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
+                <CircleDollarSign color={colors.onSurfaceVariant} size={28} />
               </View>
-              {idx < transactions.length - 1 && (
-                <View style={[styles.separator, { backgroundColor: colors.outline }]} />
-              )}
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8 }}>
+                Scan for recent transactions
+              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'transparent', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full }}>
+                <ShieldCheck color={colors.primary} size={14} />
+                <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>
+                  Protected & Private
+                </Text>
+              </View>
             </View>
-          ))}
+          ) : (
+            transactions.map((tx, idx) => {
+              const IconComponent = IconMap[tx.iconName] || CircleDollarSign;
+              return (
+                <View key={tx.id}>
+                  <View style={[styles.txItem, { paddingVertical: 14 }]}>
+                    <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+                      <IconComponent color={colors.onSurfaceVariant} size={20} />
+                    </View>
+                    <View style={styles.txInfo}>
+                      <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
+                      <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.category} • {tx.date}</Text>
+                    </View>
+                    <View style={styles.txAmounts}>
+                      <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>
+                        {tx.amount < 0 ? `-₹${Math.abs(tx.amount).toFixed(2)}` : `+₹${tx.amount.toFixed(2)}`}
+                      </Text>
+                      <View style={[styles.txStatusBadge, {
+                        backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
+                      }]}>
+                        <Text style={[styles.txStatusText, {
+                          color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
+                        }]}>{tx.status}</Text>
+                      </View>
+                    </View>
+                  </View>
+                  {idx < transactions.length - 1 && (
+                    <View style={[styles.separator, { backgroundColor: colors.outline }]} />
+                  )}
+                </View>
+              );
+            })
+          )}
         </View>
       </ScrollView>
 

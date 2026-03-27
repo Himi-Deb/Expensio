@@ -14,6 +14,7 @@ import {
 
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { TransactionProvider } from '../src/context/TransactionContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,9 +35,10 @@ export default function RootLayout() {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* Initial Entry — Onboarding */}
-        <Stack.Screen name="index" options={{ animation: 'fade' }} />
+      <TransactionProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* Initial Entry — Onboarding */}
+          <Stack.Screen name="index" options={{ animation: 'fade' }} />
         {/* Authentication flow */}
         <Stack.Screen name="sign-in" options={{ animation: 'slide_from_bottom' }} />
         <Stack.Screen name="register" options={{ animation: 'slide_from_right' }} />
@@ -62,9 +64,10 @@ export default function RootLayout() {
         <Stack.Screen name="create-group" options={{ presentation: 'modal' }} />
 
         {/* Overlays / Bottom Sheets */}
-        <Stack.Screen name="add-expense" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="settle-up" options={{ presentation: 'transparentModal', animation: 'slide_from_bottom' }} />
-      </Stack>
+          <Stack.Screen name="add-expense" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="settle-up" options={{ presentation: 'transparentModal', animation: 'slide_from_bottom' }} />
+        </Stack>
+      </TransactionProvider>
     </ThemeContext.Provider>
   );
 }

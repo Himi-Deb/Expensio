@@ -12,6 +12,7 @@ import { useTheme } from '../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useRef, useState, useEffect } from 'react';
+import { useTransactions } from '../src/context/TransactionContext';
 
 const AUTO_ADVANCE_MS = 5000;
 
@@ -34,6 +35,12 @@ const SLIDES = [
     id: 'personalize',
     title: 'Personalize',
     body: 'Set Goals, tracks assets, build wealth all\nfrom one app.',
+    image: require('../Expensio/Onboarding3-Personalize.png'),
+  },
+  {
+    id: 'sms_consent',
+    title: 'Automate Expenses',
+    body: 'Allow Expensio to securely scan your device messages to auto-detect and auto-categorize your future transactions!',
     image: require('../Expensio/Onboarding3-Personalize.png'),
   },
 ];
@@ -123,6 +130,7 @@ function SlideItem({
 export default function OnboardingScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
+  const { setSmsConsent } = useTransactions();
 
   // 👇 Reactive: updates on resize / orientation change / web window resize
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
@@ -195,9 +203,12 @@ export default function OnboardingScreen() {
     if (activeIndex < SLIDES.length - 1) {
       scrollToIdx(activeIndex + 1);
       resetTimer();
-    } else {
-      router.replace('/register');
     }
+  };
+
+  const handleConsent = (status: boolean) => {
+    setSmsConsent(status);
+    router.replace('/register');
   };
 
   return (
@@ -264,45 +275,61 @@ export default function OnboardingScreen() {
             paddingTop: 16,
           }}
         >
-          <TouchableOpacity
-            onPress={goNext}
-            activeOpacity={0.85}
-            style={{
-              backgroundColor: '#73FFE3',
-              borderRadius: borderRadius.lg,
-              paddingVertical: 18,
-              alignItems: 'center',
-              marginBottom: 20,
-            }}
-          >
-            <Text
-              style={{
-                color: '#000000',
-                fontFamily: 'Manrope_600SemiBold',
-                fontSize: 18,
-              }}
-            >
-              Sign Up
-            </Text>
-          </TouchableOpacity>
+          {activeIndex === SLIDES.length - 1 ? (
+            <>
+              <TouchableOpacity
+                onPress={() => handleConsent(true)}
+                activeOpacity={0.85}
+                style={{
+                  backgroundColor: '#73FFE3',
+                  borderRadius: borderRadius.lg,
+                  paddingVertical: 18,
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}
+              >
+                <Text style={{ color: '#000000', fontFamily: 'Manrope_600SemiBold', fontSize: 18 }}>
+                  Allow Access
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ alignItems: 'center', paddingVertical: 10 }}
+                onPress={() => handleConsent(false)}
+              >
+                <Text style={{ color: '#ADAAAA', fontFamily: 'Manrope_500Medium', fontSize: 16 }}>
+                  Maybe Later
+                </Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity
+                onPress={goNext}
+                activeOpacity={0.85}
+                style={{
+                  backgroundColor: '#73FFE3',
+                  borderRadius: borderRadius.lg,
+                  paddingVertical: 18,
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}
+              >
+                <Text style={{ color: '#000000', fontFamily: 'Manrope_600SemiBold', fontSize: 18 }}>
+                  Continue
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ alignItems: 'center' }}
-            onPress={() => router.replace('/sign-in')}
-          >
-            <Text
-              style={{
-                color: '#ADAAAA',
-                fontFamily: 'Manrope_400Regular',
-                fontSize: 14,
-              }}
-            >
-              Already have an account with us?{' '}
-              <Text style={{ color: '#73FFE3', fontFamily: 'Manrope_500Medium' }}>
-                Sign In
-              </Text>
-            </Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={{ alignItems: 'center' }}
+                onPress={() => router.replace('/sign-in')}
+              >
+                <Text style={{ color: '#ADAAAA', fontFamily: 'Manrope_400Regular', fontSize: 14 }}>
+                  Already have an account with us?{' '}
+                  <Text style={{ color: '#73FFE3', fontFamily: 'Manrope_500Medium' }}>Sign In</Text>
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
       </View>

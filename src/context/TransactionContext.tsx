@@ -15,12 +15,15 @@ interface TransactionContextType {
   transactions: Transaction[];
   addTransaction: (tx: Omit<Transaction, 'id'>) => void;
   removeTransaction: (id: string) => void;
+  hasSmsConsent: boolean | null;
+  setSmsConsent: (consent: boolean) => void;
 }
 
 const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
 export function TransactionProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [hasSmsConsent, setSmsConsent] = useState<boolean | null>(null);
 
   const addTransaction = (tx: Omit<Transaction, 'id'>) => {
     const newTx = {
@@ -36,7 +39,7 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TransactionContext.Provider value={{ transactions, addTransaction, removeTransaction }}>
+    <TransactionContext.Provider value={{ transactions, addTransaction, removeTransaction, hasSmsConsent, setSmsConsent }}>
       {children}
     </TransactionContext.Provider>
   );

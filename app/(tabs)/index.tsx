@@ -19,7 +19,7 @@ const IconMap: Record<string, any> = {
 export default function DashboardScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-  const { transactions } = useTransactions();
+  const { transactions, hasSmsConsent, setSmsConsent } = useTransactions();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -155,9 +155,22 @@ export default function DashboardScreen() {
               <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.surfaceContainerHigh, justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
                 <CircleDollarSign color={colors.onSurfaceVariant} size={28} />
               </View>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8 }}>
-                Scan for recent transactions
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
+                {hasSmsConsent === false ? "No recent activity found" : "Scan for recent transactions"}
               </Text>
+
+              {hasSmsConsent === false && (
+                <TouchableOpacity 
+                  onPress={() => setSmsConsent(true)}
+                  style={{ backgroundColor: colors.surfaceContainerHighest, paddingHorizontal: 20, paddingVertical: 12, borderRadius: borderRadius.full, marginTop: 12, marginBottom: 24 }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={{ color: colors.primary, fontFamily: 'Manrope_600SemiBold', fontSize: 13, letterSpacing: 0.5 }}>
+                    SCAN MESSAGES FOR ACTIVITY
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'transparent', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full }}>
                 <ShieldCheck color={colors.primary} size={14} />
                 <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>

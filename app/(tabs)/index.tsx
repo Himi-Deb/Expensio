@@ -22,12 +22,15 @@ export default function DashboardScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'LeagueGothic_400Regular', fontSize: 48, textTransform: 'uppercase', letterSpacing: 1 }]}>
-              Expensio
-            </Text>
-          </View>
-          <TouchableOpacity>
+          <TouchableOpacity style={[styles.avatarBox, { backgroundColor: colors.surfaceContainerHighest }]}>
+            <User color={colors.onSurfaceVariant} size={20} />
+          </TouchableOpacity>
+
+          <Text style={[styles.vaultTitle, { color: colors.primary, fontFamily: 'LeagueGothic_400Regular', fontSize: 34, textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }]}>
+            Expensio
+          </Text>
+
+          <TouchableOpacity style={styles.bellBtn}>
             <Bell color={colors.onSurface} size={24} />
           </TouchableOpacity>
         </View>
@@ -197,19 +200,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 28,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
   avatarBox: {
     width: 38,
     height: 38,
     borderRadius: 19,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start', // keeps icon native while expanding box visually, actually center is better
   },
-  vaultTitle: {},
+  bellBtn: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  vaultTitle: {
+    flex: 1, // dynamically fills the center gap ensuring the text sits perfectly aligned
+  },
   mainCard: {},
   cardHeaderRow: {
     flexDirection: 'row',

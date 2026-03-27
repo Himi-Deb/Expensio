@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 19,
     justifyContent: 'center',
-    alignItems: 'flex-start', // keeps icon native while expanding box visually, actually center is better
+    alignItems: 'center',
   },
   bellBtn: {
     width: 38,

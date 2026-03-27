@@ -53,7 +53,7 @@ export default function TransactionDetailScreen() {
           </Text>
           <Text style={[styles.heromerchant, {
             color: colors.onSurfaceVariant,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Manrope_400Regular',
             fontSize: 14,
             marginTop: 4,
           }]}>
@@ -73,7 +73,7 @@ export default function TransactionDetailScreen() {
             <Utensils color={colors.onSurfaceVariant} size={12} />
             <Text style={[styles.categoryPillText, {
               color: colors.onSurfaceVariant,
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Manrope_500Medium',
               fontSize: 11,
               letterSpacing: 1,
             }]}>
@@ -114,7 +114,7 @@ export default function TransactionDetailScreen() {
 
           {/* Account Used */}
           <View style={[styles.detailCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 12 }]}>
+            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 12 }]}>
               ACCOUNT USED
             </Text>
             <View style={styles.fieldRow}>
@@ -125,7 +125,7 @@ export default function TransactionDetailScreen() {
                 <Text style={[styles.fieldValue, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>
                   ICICI Bank
                 </Text>
-                <Text style={[styles.fieldMeta, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 2 }]}>
+                <Text style={[styles.fieldMeta, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, marginTop: 2 }]}>
                   **** 9012
                 </Text>
               </View>
@@ -134,13 +134,13 @@ export default function TransactionDetailScreen() {
 
           {/* Transaction Date */}
           <View style={[styles.detailCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }]}>
+            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }]}>
               TRANSACTION DATE
             </Text>
             <Text style={[styles.fieldValue, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
               Aug 14, 2024
             </Text>
-            <Text style={[styles.fieldMeta, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13, marginTop: 2 }]}>
+            <Text style={[styles.fieldMeta, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 13, marginTop: 2 }]}>
               8:42 PM
             </Text>
           </View>
@@ -148,13 +148,13 @@ export default function TransactionDetailScreen() {
           {/* Source SMS */}
           <View style={[styles.detailCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
             <View style={styles.smsHeader}>
-              <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+              <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }]}>
                 SOURCE SMS
               </Text>
               <MessageSquare color={colors.onSurfaceVariant} size={16} />
             </View>
             <View style={[styles.smsBody, { backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.sm, padding: 12, marginTop: 10 }]}>
-              <Text style={[styles.smsText, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, lineHeight: 18 }]}>
+              <Text style={[styles.smsText, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, lineHeight: 18 }]}>
                 Vp-ICICIB: Acct XX9012 debited for INR 1,200.00 on 14-Aug-24. Info: West Village Bistro. Call 1800...
               </Text>
             </View>
@@ -162,7 +162,7 @@ export default function TransactionDetailScreen() {
 
           {/* Notes & Evidence */}
           <View style={[styles.detailCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 12 }]}>
+            <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 12 }]}>
               NOTES & EVIDENCE
             </Text>
             <TextInput
@@ -173,7 +173,7 @@ export default function TransactionDetailScreen() {
               multiline
               style={[styles.noteInput, {
                 color: colors.onSurface,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Manrope_400Regular',
                 fontSize: 14,
                 minHeight: 52,
                 borderBottomWidth: 1,
@@ -187,7 +187,7 @@ export default function TransactionDetailScreen() {
               <View style={[styles.attachIconBox, { backgroundColor: colors.surfaceContainerHighest, borderRadius: 10 }]}>
                 <Camera color={colors.onSurfaceVariant} size={18} />
               </View>
-              <Text style={[styles.attachText, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 14, flex: 1 }]}>
+              <Text style={[styles.attachText, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 14, flex: 1 }]}>
                 Add Attachment
               </Text>
               <View style={[styles.attachPlaceholder, { backgroundColor: colors.surfaceContainerHighest, borderRadius: 10 }]}>
@@ -201,7 +201,7 @@ export default function TransactionDetailScreen() {
         {/* Transaction ID Footer */}
         <Text style={[styles.txId, {
           color: colors.outlineVariant,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: 'Manrope_400Regular',
           fontSize: 11,
           textAlign: 'center',
           marginTop: spacing.xl,

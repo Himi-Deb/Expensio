@@ -69,7 +69,7 @@ export default function DashboardScreen() {
               alignItems: 'center',
               gap: 8,
             }]}>
-              <Text style={{ color: colors.onPrimary, fontFamily: 'Inter_500Medium', fontSize: 12, letterSpacing: 0.5 }}>ANALYSIS</Text>
+              <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_500Medium', fontSize: 12, letterSpacing: 0.5 }}>ANALYSIS</Text>
               <ArrowRight color={colors.onPrimary} size={14} />
             </TouchableOpacity>
           </View>
@@ -80,7 +80,7 @@ export default function DashboardScreen() {
           <Text style={[styles.sectionTitle, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }]}>
             Budget
           </Text>
-          <Text style={[styles.sectionMeta, { color: colors.onSurfaceVariant, fontSize: 12, letterSpacing: 1, fontFamily: 'Inter_500Medium' }]}>
+          <Text style={[styles.sectionMeta, { color: colors.onSurfaceVariant, fontSize: 12, letterSpacing: 1, fontFamily: 'Manrope_500Medium' }]}>
             AUG 2024
           </Text>
         </View>
@@ -101,7 +101,7 @@ export default function DashboardScreen() {
             </View>
             <Text style={[styles.createBudgetText, {
               color: colors.onSurfaceVariant,
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Manrope_500Medium',
               fontSize: 11,
               marginTop: 14,
               letterSpacing: 1,
@@ -135,7 +135,7 @@ export default function DashboardScreen() {
             Recent Activity
           </Text>
           <TouchableOpacity>
-            <Text style={[styles.sectionAction, { color: colors.primary, fontSize: 12, letterSpacing: 1, fontFamily: 'Inter_500Medium' }]}>
+            <Text style={[styles.sectionAction, { color: colors.primary, fontSize: 12, letterSpacing: 1, fontFamily: 'Manrope_500Medium' }]}>
               VIEW ALL
             </Text>
           </TouchableOpacity>
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1.2,
   },
   mainBalance: {},
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   vaultIdLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1.2,
   },
   vaultIdData: {},
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   txStatusText: {
     fontSize: 8,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 0.8,
   },
   separator: {

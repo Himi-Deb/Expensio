@@ -49,12 +49,12 @@ export default function AddExpenseScreen() {
         <View style={styles.form}>
            <Text style={[styles.label, { color: colors.onSurfaceVariant, marginBottom: spacing.sm }]}>DESCRIPTION</Text>
            <View style={[styles.inputBox, { backgroundColor: colors.surfaceContainerHigh, borderRadius: borderRadius.md, padding: spacing.md, marginBottom: spacing.lg }]}>
-              <TextInput placeholder="Dinner at Olive" style={{ fontFamily: 'Inter_400Regular', fontSize: 16 }} />
+              <TextInput placeholder="Dinner at Olive" style={{ fontFamily: 'Manrope_400Regular', fontSize: 16 }} />
            </View>
 
            <Text style={[styles.label, { color: colors.onSurfaceVariant, marginBottom: spacing.sm }]}>GROUP</Text>
            <TouchableOpacity style={[styles.picker, { backgroundColor: colors.surfaceContainerHigh, borderRadius: borderRadius.md, padding: spacing.md, marginBottom: spacing.lg }]}>
-              <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 16 }}>Trip to Goa</Text>
+              <Text style={{ fontFamily: 'Manrope_400Regular', fontSize: 16 }}>Trip to Goa</Text>
               <ChevronDown color={colors.onSurfaceVariant} size={20} />
            </TouchableOpacity>
 
@@ -72,7 +72,7 @@ export default function AddExpenseScreen() {
                 ]}>
                    <Text style={{ 
                      color: i === 0 ? 'white' : colors.onSurfaceVariant, 
-                     fontFamily: 'Inter_500Medium',
+                     fontFamily: 'Manrope_500Medium',
                      fontSize: 13
                    }}>
                      {mode}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 10,
     letterSpacing: 1,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
   },
   amountInputRow: {
     flexDirection: 'row',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     letterSpacing: 0.5,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
   },
   inputBox: {},
   picker: {

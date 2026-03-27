@@ -27,7 +27,7 @@ export default function TabLayout() {
           right: 0,
         },
         tabBarLabelStyle: {
-          fontFamily: 'Inter_500Medium',
+          fontFamily: 'Manrope_500Medium',
           fontSize: 10,
           letterSpacing: 0.5,
           marginTop: 4,

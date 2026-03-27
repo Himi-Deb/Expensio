@@ -56,7 +56,7 @@ export default function DiningTransactionsScreen() {
           <View style={{ width: 64, height: 64, backgroundColor: colors.primaryContainer, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <Utensils color={colors.primary} size={28} />
           </View>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.5, marginBottom: 8 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.5, marginBottom: 8 }}>
             TOTAL MONTHLY SPEND
           </Text>
           <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 44, letterSpacing: -1.5 }}>
@@ -65,7 +65,7 @@ export default function DiningTransactionsScreen() {
           
           <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#3D1C1C', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full, marginTop: 12, gap: 6 }}>
             <ArrowUpRight color="#FF716C" size={14} />
-            <Text style={{ color: '#FFACAC', fontFamily: 'Inter_500Medium', fontSize: 12 }}>
+            <Text style={{ color: '#FFACAC', fontFamily: 'Manrope_500Medium', fontSize: 12 }}>
               12% more than last month
             </Text>
           </View>
@@ -75,26 +75,26 @@ export default function DiningTransactionsScreen() {
         <View style={{ flexDirection: 'row', paddingHorizontal: spacing.xl, marginBottom: 40 }}>
           {/* Frequent Vendor */}
           <View style={{ flex: 1, borderRightWidth: 1, borderRightColor: colors.outline, paddingRight: 16 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
               FREQUENT VENDOR
             </Text>
             <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
               Blue Bottle
             </Text>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 4 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, marginTop: 4 }}>
               14 Visits
             </Text>
           </View>
 
           {/* Average Tx */}
           <View style={{ flex: 1, paddingLeft: 16 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 8 }}>
               AVERAGE TRANSACTION
             </Text>
             <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
               ₹42.30
             </Text>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 4 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, marginTop: 4 }}>
               Per transaction
             </Text>
           </View>
@@ -105,7 +105,7 @@ export default function DiningTransactionsScreen() {
           <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }}>
             Recent Activity
           </Text>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 13 }}>
             October 2023
           </Text>
         </View>
@@ -114,7 +114,7 @@ export default function DiningTransactionsScreen() {
         <View style={{ paddingHorizontal: spacing.xl, gap: 24 }}>
           {TRANSACTIONS_BY_DATE.map((group) => (
             <View key={group.dateLabel}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1, marginBottom: 12 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1, marginBottom: 12 }}>
                 {group.dateLabel}
               </Text>
               
@@ -132,7 +132,7 @@ export default function DiningTransactionsScreen() {
                         <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>
                           {tx.name}
                         </Text>
-                        <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13, marginTop: 2 }}>
+                        <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 13, marginTop: 2 }}>
                           {tx.time} • {tx.method}
                         </Text>
                       </View>
@@ -156,7 +156,7 @@ export default function DiningTransactionsScreen() {
           <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 8 }}>
             Notice something wrong?
           </Text>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, marginBottom: 20 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 14, lineHeight: 22, marginBottom: 20 }}>
             We automatically group dining transactions. If your activity seems miscategorized, you can edit them.
           </Text>
           <TouchableOpacity

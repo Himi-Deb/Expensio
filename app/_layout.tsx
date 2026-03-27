@@ -7,7 +7,7 @@ import {
   Manrope_600SemiBold,
   Manrope_700Bold,
 } from '@expo-google-fonts/manrope';
-import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
+
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -19,8 +19,6 @@ export default function RootLayout() {
     Manrope_500Medium,
     Manrope_600SemiBold,
     Manrope_700Bold,
-    Inter_400Regular,
-    Inter_500Medium,
   });
 
   useEffect(() => {

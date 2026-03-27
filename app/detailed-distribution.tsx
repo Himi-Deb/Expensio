@@ -89,13 +89,13 @@ function DonutChart({ total, pct }: { total: string; pct: string }) {
       </Svg>
       {/* Center text */}
       <View style={{ alignItems: 'center' }}>
-        <Text style={{ color: '#ADAAAA', fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1.5 }}>TOTAL SPENT</Text>
+        <Text style={{ color: '#ADAAAA', fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1.5 }}>TOTAL SPENT</Text>
         <Text style={{ color: '#FFFFFF', fontFamily: 'Manrope_700Bold', fontSize: 32, letterSpacing: -1.5, marginTop: 4 }}>
           {total}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8, backgroundColor: '#1A332B', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, gap: 4 }}>
           <TrendingUp color="#86FFD9" size={12} />
-          <Text style={{ color: '#86FFD9', fontFamily: 'Inter_500Medium', fontSize: 11 }}>{pct}</Text>
+          <Text style={{ color: '#86FFD9', fontFamily: 'Manrope_500Medium', fontSize: 11 }}>{pct}</Text>
         </View>
       </View>
     </View>
@@ -143,7 +143,7 @@ export default function DetailedDistributionScreen() {
             <View style={{ backgroundColor: colors.primaryContainer, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
               <CreditCard color={colors.primary} size={18} />
             </View>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 0.5, marginBottom: 4 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 0.5, marginBottom: 4 }}>
               Highest Expense
             </Text>
             <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
@@ -155,7 +155,7 @@ export default function DetailedDistributionScreen() {
             <View style={{ backgroundColor: colors.primaryContainer, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
               <TrendingUp color={colors.primary} size={18} />
             </View>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 0.5, marginBottom: 4 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 0.5, marginBottom: 4 }}>
               Daily Average
             </Text>
             <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
@@ -170,7 +170,7 @@ export default function DetailedDistributionScreen() {
             Category Breakdown
           </Text>
           <TouchableOpacity>
-            <Text style={{ color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.5 }}>
+            <Text style={{ color: colors.primary, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.5 }}>
               SHOW ALL
             </Text>
           </TouchableOpacity>
@@ -189,7 +189,7 @@ export default function DetailedDistributionScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <Text style={{ color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 15 }}>
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 15 }}>
                     {cat.label}
                   </Text>
                   <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 15 }}>
@@ -204,11 +204,11 @@ export default function DetailedDistributionScreen() {
                     <View style={{ flex: 1, height: 4, backgroundColor: colors.surfaceContainerHighest, borderRadius: 2 }}>
                       <View style={{ height: '100%', backgroundColor: cat.color, borderRadius: 2, width: `${cat.pct}%` }} />
                     </View>
-                    <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, width: 30 }}>
+                    <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, width: 30 }}>
                       {cat.pct}%
                     </Text>
                   </View>
-                  <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 0.5, marginLeft: 16 }}>
+                  <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 0.5, marginLeft: 16 }}>
                     {cat.count}
                   </Text>
                 </View>
@@ -233,14 +233,14 @@ export default function DetailedDistributionScreen() {
           </View>
           <Text style={{
             color: '#AAB8B2',
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Manrope_400Regular',
             fontSize: 14,
             lineHeight: 22,
             marginTop: 16,
             marginBottom: 24,
           }}>
             Your "Dining" spends are 20% higher than last month. You could save{' '}
-            <Text style={{ color: '#FFFFFF', fontFamily: 'Inter_500Medium' }}>₹3,500</Text> by reaching your goal.
+            <Text style={{ color: '#FFFFFF', fontFamily: 'Manrope_500Medium' }}>₹3,500</Text> by reaching your goal.
           </Text>
           <TouchableOpacity
             style={{

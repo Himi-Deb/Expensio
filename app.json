@@ -17,8 +17,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#f4fbf3"
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#0E0E0E"
       }
     },
     "web": {
@@ -27,7 +27,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ]
   }
 }

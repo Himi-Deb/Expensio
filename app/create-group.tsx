@@ -299,13 +299,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   uploadLabel: {
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     fontSize: 11,
     letterSpacing: 1.5,
   },
   fieldGroup: {},
   fieldLabel: {
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     fontSize: 10,
     letterSpacing: 1.5,
     marginBottom: 12,
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   },
   sliderMinMax: {
     fontSize: 10,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   categoryRow: {
     flexDirection: 'row',
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   shareSub: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 12,
   },
   urlRow: {
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   urlText: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 14,
   },
   selectedScroll: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 16,
     padding: 0,
   },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   contactHandle: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 13,
   },
   contactActionBtn: {
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   inviteNoteText: {
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     fontSize: 12,
     lineHeight: 18,
   },

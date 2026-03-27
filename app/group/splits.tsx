@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   pageSubtitle: {
     fontSize: 14,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
   },
   summaryRow: {
     flexDirection: 'row',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 11,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1,
     marginBottom: 8,
   },
@@ -166,11 +166,11 @@ const styles = StyleSheet.create({
   },
   tasksPillText: {
     fontSize: 11,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
   },
   sectionTitle: {
     fontSize: 13,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1.5,
   },
   memberRow: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   memberStatus: {
     fontSize: 13,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   memberAction: {
     justifyContent: 'center',
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 13,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
     textAlign: 'center',
     lineHeight: 20,
   },

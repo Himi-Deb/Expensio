@@ -72,7 +72,7 @@ export default function CreateBudgetScreen() {
 
         {/* Budget Limit */}
         <View style={{ paddingHorizontal: spacing.xl, marginTop: 40, alignItems: 'center' }}>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.5 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.5 }}>
             BUDGET LIMIT
           </Text>
 
@@ -121,14 +121,14 @@ export default function CreateBudgetScreen() {
 
           {/* Min/Max labels */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 12 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }}>₹0</Text>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12 }}>₹1,00,000</Text>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12 }}>₹0</Text>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12 }}>₹1,00,000</Text>
           </View>
         </View>
 
         {/* Budget Name Input */}
         <View style={{ paddingHorizontal: spacing.xl, marginTop: 40 }}>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2, marginBottom: 12 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.2, marginBottom: 12 }}>
             BUDGET NAME
           </Text>
           <TextInput
@@ -138,7 +138,7 @@ export default function CreateBudgetScreen() {
             placeholderTextColor={colors.onSurfaceVariant}
             style={{
               color: colors.onSurface,
-              fontFamily: 'Inter_400Regular',
+              fontFamily: 'Manrope_400Regular',
               fontSize: 18,
               paddingBottom: 12,
             }}
@@ -148,11 +148,11 @@ export default function CreateBudgetScreen() {
         {/* Select Category */}
         <View style={{ paddingHorizontal: spacing.xl, marginTop: 32 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.2 }}>
               SELECT CATEGORY
             </Text>
             <TouchableOpacity>
-              <Text style={{ color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 13 }}>View All</Text>
+              <Text style={{ color: colors.primary, fontFamily: 'Manrope_500Medium', fontSize: 13 }}>View All</Text>
             </TouchableOpacity>
           </View>
 
@@ -183,7 +183,7 @@ export default function CreateBudgetScreen() {
                   <cat.icon color={isSelected ? colors.primary : colors.onSurfaceVariant} size={16} />
                   <Text style={{
                     color: isSelected ? colors.primary : colors.onSurface,
-                    fontFamily: 'Inter_500Medium',
+                    fontFamily: 'Manrope_500Medium',
                     fontSize: 14,
                   }}>
                     {cat.label}
@@ -217,7 +217,7 @@ export default function CreateBudgetScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity style={{ alignItems: 'center', marginTop: 24 }} onPress={() => router.back()}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 15 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 15 }}>
               Cancel
             </Text>
           </TouchableOpacity>

@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     fontSize: 14,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     marginBottom: 4,
   },
   balanceAmount: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     fontSize: 12,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     letterSpacing: 1,
   },
   card: {},
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   settlementRole: {
     fontSize: 13,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   settlementAmount: {
     fontSize: 18,
@@ -237,11 +237,11 @@ const styles = StyleSheet.create({
   },
   expenseSub: {
     fontSize: 12,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   expenseSplit: {
     fontSize: 12,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Manrope_400Regular',
   },
   expenseRight: {
     alignItems: 'flex-end',
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   expenseMyShare: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Manrope_500Medium',
     textTransform: 'uppercase',
   },
   fab: {

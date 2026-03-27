@@ -110,7 +110,7 @@ export default function SelectGroupScreen() {
           style={[styles.searchInput, {
             flex: 1,
             color: colors.onSurface,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Manrope_400Regular',
             fontSize: 15,
           }]}
         />
@@ -146,14 +146,14 @@ export default function SelectGroupScreen() {
                 <Text style={[styles.groupName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }]}>
                   {group.name}
                 </Text>
-                <Text style={[styles.groupMeta, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 2 }]}>
+                <Text style={[styles.groupMeta, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, marginTop: 2 }]}>
                   {group.members} Members • {group.status}
                 </Text>
               </View>
 
               {/* Balance */}
               <View style={{ alignItems: 'flex-end' }}>
-                <Text style={[styles.balanceLabel, { color: group.balanceColor, fontFamily: 'Inter_500Medium', fontSize: 11 }]}>
+                <Text style={[styles.balanceLabel, { color: group.balanceColor, fontFamily: 'Manrope_500Medium', fontSize: 11 }]}>
                   {group.balanceLabel}
                 </Text>
                 <Text style={[styles.balanceAmt, { color: group.balanceColor, fontFamily: 'Manrope_700Bold', fontSize: 15, marginTop: 1 }]}>

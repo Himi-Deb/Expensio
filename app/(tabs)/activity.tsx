@@ -105,7 +105,7 @@ export default function ActivityScreen() {
             <Utensils color={colors.primary} size={28} />
           </View>
 
-          <Text style={[styles.heroLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.2, marginTop: 20 }]}>
+          <Text style={[styles.heroLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.2, marginTop: 20 }]}>
             TOTAL MONTHLY SPEND
           </Text>
           <Text style={[styles.heroAmount, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 42, letterSpacing: -1.5, marginTop: 4 }]}>
@@ -113,7 +113,7 @@ export default function ActivityScreen() {
           </Text>
           <View style={styles.trendRow}>
             <TrendingUp color="#FF716C" size={14} />
-            <Text style={[styles.trendText, { color: '#FF716C', fontFamily: 'Inter_500Medium', fontSize: 12, marginLeft: 5 }]}>
+            <Text style={[styles.trendText, { color: '#FF716C', fontFamily: 'Manrope_500Medium', fontSize: 12, marginLeft: 5 }]}>
               12% more than last month
             </Text>
           </View>
@@ -122,7 +122,7 @@ export default function ActivityScreen() {
         {/* Stats Row */}
         <View style={[styles.statsRow, { marginHorizontal: spacing.lg, marginTop: spacing.xl }]}>
           <View style={[styles.statCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.statLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+            <Text style={[styles.statLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }]}>
               FREQUENT VENDOR
             </Text>
             <Text style={[styles.statValue, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18, marginTop: 6 }]}>
@@ -131,7 +131,7 @@ export default function ActivityScreen() {
             <Text style={[styles.statMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>14 Visits</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.md }]}>
-            <Text style={[styles.statLabel, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }]}>
+            <Text style={[styles.statLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }]}>
               AVERAGE TICKET
             </Text>
             <Text style={[styles.statValue, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18, marginTop: 6 }]}>
@@ -146,7 +146,7 @@ export default function ActivityScreen() {
           <Text style={[styles.activityTitle, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 18 }]}>
             Recent Activity
           </Text>
-          <Text style={[styles.activityMonth, { color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 12, letterSpacing: 0.5 }]}>
+          <Text style={[styles.activityMonth, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 12, letterSpacing: 0.5 }]}>
             October 2023
           </Text>
         </View>
@@ -156,7 +156,7 @@ export default function ActivityScreen() {
             {/* Day label */}
             <Text style={[styles.dayLabel, {
               color: colors.onSurfaceVariant,
-              fontFamily: 'Inter_500Medium',
+              fontFamily: 'Manrope_500Medium',
               fontSize: 11,
               letterSpacing: 1,
               paddingHorizontal: spacing.lg,
@@ -188,7 +188,7 @@ export default function ActivityScreen() {
                       {tx.manualRecat && (
                         <View style={[styles.recatBadge, { marginTop: 4 }]}>
                           <AlertCircle color={colors.primary} size={10} style={{ marginRight: 3 }} />
-                          <Text style={[styles.recatText, { color: colors.primary, fontFamily: 'Inter_500Medium', fontSize: 8, letterSpacing: 0.5 }]}>
+                          <Text style={[styles.recatText, { color: colors.primary, fontFamily: 'Manrope_500Medium', fontSize: 8, letterSpacing: 0.5 }]}>
                             MANUAL RE-CATEGORIZATION
                           </Text>
                         </View>
@@ -225,7 +225,7 @@ export default function ActivityScreen() {
             paddingVertical: 12,
             alignItems: 'center',
           }]}>
-            <Text style={[styles.bulkEditBtnText, { color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 14 }]}>
+            <Text style={[styles.bulkEditBtnText, { color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 14 }]}>
               Bulk Edit Transactions
             </Text>
           </TouchableOpacity>

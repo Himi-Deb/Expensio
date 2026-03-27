@@ -43,7 +43,7 @@ export default function SelectCategoryScreen() {
           <Text style={[styles.title, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 24 }]}>
             Select Category
           </Text>
-          <Text style={[styles.subtitle, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 13, marginTop: 4 }]}>
+          <Text style={[styles.subtitle, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 13, marginTop: 4 }]}>
             Organize your monthly ₹ expenses
           </Text>
         </View>
@@ -76,7 +76,7 @@ export default function SelectCategoryScreen() {
           style={[styles.searchInput, {
             flex: 1,
             color: colors.onSurface,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Manrope_400Regular',
             fontSize: 15,
           }]}
         />
@@ -106,7 +106,7 @@ export default function SelectCategoryScreen() {
                 <Text style={[styles.catName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }]}>
                   {cat.label}
                 </Text>
-                <Text style={[styles.catAvg, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 2 }]}>
+                <Text style={[styles.catAvg, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 12, marginTop: 2 }]}>
                   AVG. {cat.avg} / MO
                 </Text>
               </View>
@@ -140,12 +140,12 @@ export default function SelectCategoryScreen() {
                 placeholderTextColor={colors.onSurfaceVariant}
                 style={[styles.customInput, {
                   color: colors.onSurface,
-                  fontFamily: 'Inter_400Regular',
+                  fontFamily: 'Manrope_400Regular',
                   fontSize: 15,
                   paddingVertical: 2,
                 }]}
               />
-              <Text style={[styles.customHint, { color: colors.onSurfaceVariant, fontFamily: 'Inter_400Regular', fontSize: 11, marginTop: 3 }]}>
+              <Text style={[styles.customHint, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 11, marginTop: 3 }]}>
                 Emoji or initial will be used as icon
               </Text>
             </View>

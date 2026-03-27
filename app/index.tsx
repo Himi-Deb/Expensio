@@ -105,7 +105,7 @@ function SlideItem({
         <Text
           style={{
             color: colors.onSurface,
-            fontFamily: 'Inter_400Regular',
+            fontFamily: 'Manrope_400Regular',
             fontSize: 16,
             lineHeight: 24,
             textAlign: 'center',
@@ -196,7 +196,7 @@ export default function OnboardingScreen() {
       scrollToIdx(activeIndex + 1);
       resetTimer();
     } else {
-      router.replace('/sign-in');
+      router.replace('/register');
     }
   };
 
@@ -288,18 +288,18 @@ export default function OnboardingScreen() {
 
           <TouchableOpacity
             style={{ alignItems: 'center' }}
-            onPress={() => router.replace('/register')}
+            onPress={() => router.replace('/sign-in')}
           >
             <Text
               style={{
                 color: '#ADAAAA',
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Manrope_400Regular',
                 fontSize: 14,
               }}
             >
-              Don&apos;t have an account?{' '}
-              <Text style={{ color: '#73FFE3', fontFamily: 'Inter_500Medium' }}>
-                Register
+              Already have an account with us?{' '}
+              <Text style={{ color: '#73FFE3', fontFamily: 'Manrope_500Medium' }}>
+                Sign In
               </Text>
             </Text>
           </TouchableOpacity>

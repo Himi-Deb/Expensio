@@ -40,7 +40,7 @@ export default function NewTransactionScreen() {
         <View style={[styles.amountSection, { paddingHorizontal: spacing.xl, paddingBottom: spacing.xl }]}>
           <Text style={{
             color: colors.onSurfaceVariant,
-            fontFamily: 'Inter_500Medium',
+            fontFamily: 'Manrope_500Medium',
             fontSize: 11,
             letterSpacing: 1.5,
             textAlign: 'center',
@@ -77,7 +77,7 @@ export default function NewTransactionScreen() {
               <Utensils color={colors.onPrimary} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 CATEGORY
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
@@ -85,7 +85,7 @@ export default function NewTransactionScreen() {
               </Text>
             </View>
             <TouchableOpacity style={{ backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 16, paddingVertical: 8 }}>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Inter_500Medium', fontSize: 12 }}>Change</Text>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>Change</Text>
             </TouchableOpacity>
           </View>
 
@@ -95,7 +95,7 @@ export default function NewTransactionScreen() {
               <CreditCard color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 SPENT FROM
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
@@ -111,7 +111,7 @@ export default function NewTransactionScreen() {
               <Calendar color={colors.onSurface} size={18} />
             </View>
             <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1 }}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
                 DATE
               </Text>
               <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
@@ -123,7 +123,7 @@ export default function NewTransactionScreen() {
 
           {/* Notes */}
           <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.lg, marginTop: 8 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
               NOTES
             </Text>
             <TextInput
@@ -134,7 +134,7 @@ export default function NewTransactionScreen() {
               multiline
               style={{
                 color: colors.onSurface,
-                fontFamily: 'Inter_400Regular',
+                fontFamily: 'Manrope_400Regular',
                 fontSize: 15,
                 minHeight: 60,
               }}
@@ -193,7 +193,7 @@ export default function NewTransactionScreen() {
           }}>
             <Camera color={colors.onSurfaceVariant} size={20} />
           </View>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Inter_500Medium', fontSize: 14 }}>
+          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 14 }}>
             Add Receipt or Image
           </Text>
         </TouchableOpacity>

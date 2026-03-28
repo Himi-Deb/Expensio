@@ -37,12 +37,6 @@ const SLIDES = [
     body: 'Set Goals, tracks assets, build wealth all\nfrom one app.',
     image: require('../Expensio/Onboarding3-Personalize.png'),
   },
-  {
-    id: 'sms_consent',
-    title: 'Automate Expenses',
-    body: 'Allow Expensio to securely scan your device messages to auto-detect and auto-categorize your future transactions!',
-    image: require('../Expensio/Onboarding3-Personalize.png'),
-  },
 ];
 
 type Slide = (typeof SLIDES)[0];

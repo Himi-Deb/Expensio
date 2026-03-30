@@ -1,6 +1,6 @@
 # Expensio - Finance Personalised
 
-> A premium dark-mode expense tracking mobile app built with React Native & Expo.
+> A multi-currency expense tracking mobile app built with React Native & Expo.
 
 Expensio is a personal finance application that helps you track spending, manage budgets, split expenses with groups, and gain AI-powered insights into your financial habits — all wrapped in a sleek, neon-accented dark UI.
 

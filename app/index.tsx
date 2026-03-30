@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useRef, useState, useEffect } from 'react';
 import { useTransactions } from '../src/context/TransactionContext';
+import { smsService } from '../src/services/smsService';
 
 const AUTO_ADVANCE_MS = 5000;
 
@@ -124,7 +125,7 @@ function SlideItem({
 export default function OnboardingScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-  const { setSmsConsent } = useTransactions();
+  const { setSmsConsent, syncSmsTransactions } = useTransactions();
 
   // 👇 Reactive: updates on resize / orientation change / web window resize
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
@@ -200,8 +201,19 @@ export default function OnboardingScreen() {
     }
   };
 
-  const handleConsent = (status: boolean) => {
-    setSmsConsent(status);
+  const handleConsent = async (status: boolean) => {
+    if (status) {
+      const granted = await smsService.requestPermission();
+      if (granted) {
+        setSmsConsent(true);
+        // Fire and forget sync (the dashboard will show the loader if still processing)
+        syncSmsTransactions();
+      } else {
+        setSmsConsent(false);
+      }
+    } else {
+      setSmsConsent(false);
+    }
     router.replace('/register');
   };
 

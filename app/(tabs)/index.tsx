@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useTransactions } from '../../src/context/TransactionContext';
+import { smsService } from '../../src/services/smsService';
 
 const IconMap: Record<string, any> = {
   Coffee,
@@ -19,7 +20,21 @@ const IconMap: Record<string, any> = {
 export default function DashboardScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-  const { transactions, hasSmsConsent, setSmsConsent } = useTransactions();
+  const { transactions, hasSmsConsent, setSmsConsent, isLoadingSms, syncSmsTransactions } = useTransactions();
+
+  const handleManualScan = async () => {
+    if (hasSmsConsent) {
+      syncSmsTransactions();
+    } else {
+      const granted = await smsService.requestPermission();
+      if (granted) {
+        setSmsConsent(true);
+        syncSmsTransactions();
+      } else {
+        setSmsConsent(false);
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -150,7 +165,19 @@ export default function DashboardScreen() {
 
         {/* Activity List — standalone rows, no container card */}
         <View>
-          {transactions.length === 0 ? (
+          {isLoadingSms ? (
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+              <View style={[styles.loaderCircle, { backgroundColor: colors.surfaceContainerHigh }]}>
+                <Activity color={colors.primary} size={32} />
+              </View>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginBottom: 4 }}>
+                Scanning Transactions...
+              </Text>
+              <Text style={{ color: colors.onSurfaceVariant, fontSize: 12, opacity: 0.7 }}>
+                This will only take a moment
+              </Text>
+            </View>
+          ) : transactions.length === 0 ? (
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 40 }}>
               <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.surfaceContainerHigh, justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
                 <CircleDollarSign color={colors.onSurfaceVariant} size={28} />
@@ -159,17 +186,15 @@ export default function DashboardScreen() {
                 {hasSmsConsent === false ? "No recent activity found" : "Scan for recent transactions"}
               </Text>
 
-              {hasSmsConsent === false && (
-                <TouchableOpacity 
-                  onPress={() => setSmsConsent(true)}
-                  style={{ backgroundColor: colors.surfaceContainerHighest, paddingHorizontal: 20, paddingVertical: 12, borderRadius: borderRadius.full, marginTop: 12, marginBottom: 24 }}
-                  activeOpacity={0.7}
-                >
-                  <Text style={{ color: colors.primary, fontFamily: 'Manrope_600SemiBold', fontSize: 13, letterSpacing: 0.5 }}>
-                    SCAN MESSAGES FOR ACTIVITY
-                  </Text>
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity 
+                onPress={handleManualScan}
+                style={{ backgroundColor: colors.surfaceContainerHighest, paddingHorizontal: 20, paddingVertical: 12, borderRadius: borderRadius.full, marginTop: 12, marginBottom: 24 }}
+                activeOpacity={0.7}
+              >
+                <Text style={{ color: colors.primary, fontFamily: 'Manrope_600SemiBold', fontSize: 13, letterSpacing: 0.5 }}>
+                  SCAN TRANSACTIONS
+                </Text>
+              </TouchableOpacity>
 
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'transparent', paddingHorizontal: 12, paddingVertical: 6, borderRadius: borderRadius.full }}>
                 <ShieldCheck color={colors.primary} size={14} />
@@ -241,6 +266,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 28,
+  },
+  loaderCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   avatarBox: {
     width: 38,

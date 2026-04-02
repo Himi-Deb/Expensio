@@ -5,56 +5,254 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Modal,
+  TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { X, Utensils, CreditCard, Calendar, Camera, Users, ChevronDown, Coffee, Car, ShoppingBag, Monitor, Home, Activity as ActivityIcon, CircleDollarSign } from 'lucide-react-native';
+import {
+  X, Utensils, CreditCard, Calendar, Camera, Users,
+  ChevronDown, Coffee, Car, ShoppingBag, Monitor,
+  Home, Activity, CircleDollarSign, Zap, Plane, Globe,
+  ChevronRight, Plus, Heart, Tv, ShoppingCart, Building2, Check, Paperclip
+} from 'lucide-react-native';
 import { useState, useEffect } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 import { useTransactions } from '../src/context/TransactionContext';
+import { useGroups } from '../src/context/GroupContext';
+import { useCurrency, SUPPORTED_CURRENCIES } from '../src/context/CurrencyContext';
 import { autoCategorizeTransaction, TransactionIcon } from '../src/utils/categorization';
 
-const IconMap: Record<TransactionIcon, any> = {
-  Coffee,
-  Car,
-  ShoppingBag,
-  Utensils,
-  Monitor,
-  Home,
-  Activity: ActivityIcon,
-  CircleDollarSign,
+// Icon Map for Dynamic Rendering (Matching Detail Page)
+const IconMap: { [key: string]: any } = {
+  Utensils, ShoppingBag, Coffee, Car, Monitor, Zap, Plane, Globe, Users, Building2,
+  Health: Heart, Entertainment: Tv, ShoppingCart, Travel: Plane, DiningOut: Utensils,
+  Transport: Car, Utilities: Zap, General: CircleDollarSign
 };
+
+const CATEGORIES = [
+  'Dining Out', 'Shopping', 'Transport', 'Utilities', 'Travel', 'Health', 'Entertainment'
+];
+
+const PAYMENT_SOURCES = [
+  { id: 'cash', name: 'Cash', icon: CircleDollarSign },
+  { id: 'icici', name: 'ICICI Bank **** 9012', icon: Building2 },
+  { id: 'hdfc', name: 'HDFC Bank **** 4432', icon: Building2 },
+];
 
 export default function NewTransactionScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
   const { addTransaction } = useTransactions();
-  
+  const { groups } = useGroups();
+  const { baseCurrency } = useCurrency();
+
   const [amount, setAmount] = useState('');
   const [merchantName, setMerchantName] = useState('');
   const [category, setCategory] = useState('General');
   const [iconName, setIconName] = useState<TransactionIcon>('CircleDollarSign');
+  const [currency, setCurrency] = useState(baseCurrency ?? SUPPORTED_CURRENCIES[0]);
+  const [remarks, setRemarks] = useState('');
+
+  // New States
+  const [spentFrom, setSpentFrom] = useState(PAYMENT_SOURCES[0]);
+  const [txDate, setTxDate] = useState(new Date());
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [attachment, setAttachment] = useState<string | null>(null);
+
+  // Modal States
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [showSpentFromModal, setShowSpentFromModal] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
 
   // Intelligent Categorizer Map
   useEffect(() => {
-    const { category: newCat, iconName: newIcon } = autoCategorizeTransaction(merchantName);
-    setCategory(newCat);
-    setIconName(newIcon);
+    if (merchantName.length > 2) {
+      const { category: newCat, iconName: newIcon } = autoCategorizeTransaction(merchantName);
+      setCategory(newCat);
+      setIconName(newIcon);
+    }
   }, [merchantName]);
 
   const handleSave = () => {
     if (!amount || isNaN(Number(amount))) return;
-    
+
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const dateStr = txDate.toDateString() === today.toDateString() ? 'Today' :
+      txDate.toDateString() === yesterday.toDateString() ? 'Yesterday' :
+        txDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
     addTransaction({
-      name: merchantName || 'Unknown',
-      amount: -Math.abs(Number(amount)), // Assuming debit for prototyping
+      name: merchantName || 'Manual Entry',
+      amount: -Math.abs(Number(amount)),
+      currencyCode: currency.code,
+      amountInBase: currency.code === 'INR' ? -Math.abs(Number(amount)) : undefined,
       category,
       iconName,
-      date: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
-      status: 'CLEARED'
+      date: dateStr,
+      status: 'CLEARED',
+      source: spentFrom.name,
+      remarks: remarks.trim() || undefined,
+      attachment: attachment || undefined,
     });
-    
+
     router.back();
+  };
+
+  const handleDateChange = (selectedDate: Date) => {
+    // Prevent future dates
+    if (selectedDate > new Date()) return;
+    setTxDate(selectedDate);
+    setShowDatePicker(false);
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      setAttachment(result.assets[0].uri);
+    }
+  };
+
+  // Date Selection Modal Helper
+  const DateSelectionModal = () => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const isToday = txDate.toDateString() === today.toDateString();
+    const isYesterday = txDate.toDateString() === yesterday.toDateString();
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentMonth = txDate.getMonth();
+    const currentYear = txDate.getFullYear();
+    const currentDay = txDate.getDate();
+
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+    return (
+      <Modal visible={showDatePicker} animationType="fade" transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setShowDatePicker(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, {
+                backgroundColor: colors.surfaceContainerLow,
+                borderTopLeftRadius: 32,
+                borderTopRightRadius: 32,
+                paddingBottom: 40
+              }]}>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Date</Text>
+                </View>
+
+                {/* Presets (Swapped: Yesterday Left, Today Right) */}
+                <View style={{ flexDirection: 'row', gap: 12, paddingHorizontal: spacing.lg, marginBottom: 24 }}>
+                  <TouchableOpacity
+                    onPress={() => handleDateChange(yesterday)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: isYesterday ? colors.primary : colors.surfaceContainerHighest,
+                      paddingVertical: 12,
+                      borderRadius: 16,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={{ color: isYesterday ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 14 }}>Yesterday</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleDateChange(today)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: isToday ? colors.primary : colors.surfaceContainerHighest,
+                      paddingVertical: 12,
+                      borderRadius: 16,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={{ color: isToday ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 14 }}>Today</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Month/Year Display */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.xl, marginBottom: 20 }}>
+                  <TouchableOpacity onPress={() => {
+                    const prev = new Date(txDate);
+                    prev.setMonth(prev.getMonth() - 1);
+                    setTxDate(prev);
+                  }}>
+                    <ChevronRight color={colors.primary} size={20} style={{ transform: [{ rotate: '180deg' }] }} />
+                  </TouchableOpacity>
+                  <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>
+                    {months[currentMonth]} {currentYear}
+                  </Text>
+                  <TouchableOpacity onPress={() => {
+                    const next = new Date(txDate);
+                    next.setMonth(next.getMonth() + 1);
+                    setTxDate(next);
+                  }}>
+                    <ChevronRight color={colors.primary} size={20} />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Days Grid (Simplified) */}
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg }}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                    {days.map(day => {
+                      const dateObj = new Date(currentYear, currentMonth, day);
+                      const isSelected = txDate.toDateString() === dateObj.toDateString();
+                      return (
+                        <TouchableOpacity
+                          key={day}
+                          onPress={() => handleDateChange(dateObj)}
+                          style={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: 12,
+                            backgroundColor: isSelected ? colors.primary : colors.surfaceContainerHighest,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Text style={{
+                            color: isSelected ? colors.onPrimary : colors.onSurface,
+                            fontFamily: 'Manrope_600SemiBold',
+                            fontSize: 14
+                          }}>
+                            {day}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
+
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker(false)}
+                  style={{ margin: spacing.lg, backgroundColor: colors.surfaceContainerHigh, paddingVertical: 16, borderRadius: 16, alignItems: 'center' }}
+                >
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold' }}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    );
   };
 
   return (
@@ -68,12 +266,10 @@ export default function NewTransactionScreen() {
         <Text style={[styles.headerTitle, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
           New Transaction
         </Text>
-        <TouchableOpacity onPress={handleSave}>
-          <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>Save</Text>
-        </TouchableOpacity>
+        <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 48, marginTop: 16 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60, marginTop: 16 }}>
 
         {/* Amount Section */}
         <View style={[styles.amountSection, { paddingHorizontal: spacing.xl, paddingBottom: spacing.xl }]}>
@@ -87,8 +283,27 @@ export default function NewTransactionScreen() {
           }}>
             AMOUNT
           </Text>
+          {/* Currency Pill — centered above the number */}
+          <TouchableOpacity
+            onPress={() => setShowCurrencyModal(true)}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
+              backgroundColor: colors.surfaceContainerLow,
+              borderRadius: 20,
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              marginBottom: 8,
+              alignSelf: 'center',
+            }}
+          >
+            <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>{currency.symbol}</Text>
+            <Text style={{ color: colors.primary, fontFamily: 'Manrope_600SemiBold', fontSize: 14 }}>{currency.code}</Text>
+            <ChevronDown color={colors.primary} size={14} />
+          </TouchableOpacity>
+
           <View style={styles.amountRow}>
-            <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 42 }}>₹</Text>
             <TextInput
               value={amount}
               onChangeText={setAmount}
@@ -103,68 +318,16 @@ export default function NewTransactionScreen() {
                 minWidth: 140,
                 textAlign: 'center',
               }}
+              numberOfLines={1}
             />
           </View>
         </View>
 
-        {/* Form Fields - Flat Structure */}
+        {/* Form Fields */}
         <View style={{ paddingHorizontal: spacing.xl, gap: 12, marginTop: 12 }}>
 
-          {/* Category */}
-          <View style={styles.flatFieldRow}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.primary }]}>
-              {(() => {
-                const CurrentIcon = IconMap[iconName] || CircleDollarSign;
-                return <CurrentIcon color={colors.onPrimary} size={18} />;
-              })()}
-            </View>
-            <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
-                CATEGORY
-              </Text>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
-                {category}
-              </Text>
-            </View>
-            <TouchableOpacity style={{ backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 16, paddingVertical: 8 }}>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>Change</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Spent From */}
-          <View style={styles.flatFieldRow}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
-              <CreditCard color={colors.onSurface} size={18} />
-            </View>
-            <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
-                SPENT FROM
-              </Text>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
-                Cash
-              </Text>
-            </View>
-            <ChevronDown color={colors.onSurfaceVariant} size={20} />
-          </View>
-
-          {/* Date */}
-          <View style={styles.flatFieldRow}>
-            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
-              <Calendar color={colors.onSurface} size={18} />
-            </View>
-            <View style={styles.fieldBody}>
-              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
-                DATE
-              </Text>
-              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
-                Today
-              </Text>
-            </View>
-            <Calendar color={colors.onSurfaceVariant} size={18} />
-          </View>
-
           {/* Title / Merchant */}
-          <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.lg, marginTop: 8 }}>
+          <View style={{ backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg, padding: spacing.lg, marginBottom: 8 }}>
             <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1, marginBottom: 10 }}>
               MERCHANT / TITLE
             </Text>
@@ -176,70 +339,397 @@ export default function NewTransactionScreen() {
               style={{
                 color: colors.onSurface,
                 fontFamily: 'Manrope_600SemiBold',
-                fontSize: 16,
+                fontSize: 18,
                 minHeight: 40,
               }}
             />
           </View>
+
+          {/* Category Trigger */}
+          <TouchableOpacity
+            onPress={() => setShowCategoryModal(true)}
+            style={styles.flatFieldRow}
+          >
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.primary }]}>
+              {(() => {
+                const cleanKey = String(category).replace(' ', '');
+                const CurrentIcon = IconMap[cleanKey] || CircleDollarSign;
+                return <CurrentIcon color={colors.onPrimary} size={18} />;
+              })()}
+            </View>
+            <View style={styles.fieldBody}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
+                CATEGORY
+              </Text>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
+                {category}
+              </Text>
+            </View>
+            <View style={{ backgroundColor: colors.surfaceContainerHighest, borderRadius: borderRadius.full, paddingHorizontal: 16, paddingVertical: 8 }}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_500Medium', fontSize: 12 }}>Change</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Spent From Trigger */}
+          <TouchableOpacity
+            onPress={() => setShowSpentFromModal(true)}
+            style={styles.flatFieldRow}
+          >
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+              {spentFrom.id === 'cash' ? <spentFrom.icon color={colors.onSurface} size={18} /> :
+                <Building2 color={colors.onSurface} size={18} />}
+            </View>
+            <View style={styles.fieldBody}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
+                SPENT FROM
+              </Text>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
+                {spentFrom.name}
+              </Text>
+            </View>
+            <ChevronDown color={colors.onSurfaceVariant} size={20} />
+          </TouchableOpacity>
+
+          {/* Date Trigger */}
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.flatFieldRow}
+          >
+            <View style={[styles.fieldIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+              <Calendar color={colors.onSurface} size={18} />
+            </View>
+            <View style={styles.fieldBody}>
+              <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 10, letterSpacing: 1 }}>
+                DATE
+              </Text>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16, marginTop: 2 }}>
+                {txDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </Text>
+            </View>
+            <Calendar color={colors.onSurfaceVariant} size={18} />
+          </TouchableOpacity>
+
         </View>
 
-        {/* Split with Group CTA */}
-        <TouchableOpacity
-          style={[styles.splitBtn, {
-            backgroundColor: '#86FFD9', // Bright mint from image
-            borderRadius: borderRadius.md,
-            marginHorizontal: spacing.xl,
-            marginTop: 24,
-            paddingVertical: 18,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 10,
-            shadowColor: colors.primary,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.2,
-            shadowRadius: 20,
-            elevation: 10,
-          }]}
-          activeOpacity={0.85}
-        >
-          <Users color={colors.onPrimary} size={20} />
-          <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
-            Split with Group
-          </Text>
-        </TouchableOpacity>
+        {/* Action Buttons */}
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 32, gap: 12 }}>
+          <TouchableOpacity
+            onPress={handleSave}
+            style={[styles.primaryBtn, {
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+              paddingVertical: 18,
+              alignItems: 'center',
+              shadowColor: colors.primary,
+              shadowOffset: { width: 0, height: 6 },
+              shadowOpacity: 0.3,
+              shadowRadius: 12,
+              elevation: 8,
+            }]}
+          >
+            <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
+              Save Transaction
+            </Text>
+          </TouchableOpacity>
 
-        {/* Add Receipt / Image */}
-        <TouchableOpacity
-          style={{
-            borderColor: colors.outlineVariant,
-            borderWidth: 1.5,
-            borderStyle: 'dashed',
-            borderRadius: borderRadius.lg,
-            marginHorizontal: spacing.xl,
-            marginTop: 16,
-            paddingVertical: 32,
-            alignItems: 'center',
-            gap: 12,
-          }}
-          activeOpacity={0.7}
-        >
-          <View style={{
-            width: 48,
-            height: 48,
-            borderRadius: 24,
-            backgroundColor: colors.surfaceContainerHighest,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-            <Camera color={colors.onSurfaceVariant} size={20} />
+          <TouchableOpacity
+            onPress={() => setShowGroupModal(true)}
+            style={[styles.secondaryBtn, {
+              backgroundColor: 'transparent',
+              borderRadius: 20,
+              paddingVertical: 18,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+            }]}
+          >
+            <Users color={colors.onSurfaceVariant} size={20} />
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>
+              {selectedGroup ? `Split with ${selectedGroup.name}` : 'Split with Group'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Remarks Section */}
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 8 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }}>REMARKS</Text>
+            <TouchableOpacity onPress={pickImage} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Paperclip color={colors.primary} size={16} />
+              <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 12 }}>Add Image</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 14 }}>
-            Add Receipt or Image
-          </Text>
-        </TouchableOpacity>
+
+          <View style={[{
+            backgroundColor: colors.surfaceContainerLow,
+            borderRadius: borderRadius.lg,
+            padding: spacing.lg,
+          }]}>
+            <TextInput
+              multiline
+              value={remarks}
+              onChangeText={setRemarks}
+              placeholder="Add a note about this transaction..."
+              placeholderTextColor={colors.onSurfaceVariant}
+              style={{
+                color: colors.onSurface,
+                fontFamily: 'Manrope_500Medium',
+                fontSize: 15,
+                lineHeight: 22,
+                minHeight: 80,
+                textAlignVertical: 'top',
+                marginBottom: attachment ? 16 : 0,
+              }}
+            />
+
+            {attachment && (
+              <View style={{ position: 'relative', width: 80, height: 80 }}>
+                <Image
+                  source={{ uri: attachment }}
+                  style={{ width: 80, height: 80, borderRadius: 12 }}
+                />
+                <TouchableOpacity
+                  onPress={() => setAttachment(null)}
+                  style={{
+                    position: 'absolute',
+                    top: -5,
+                    right: -5,
+                    backgroundColor: colors.error,
+                    borderRadius: 10,
+                    padding: 2
+                  }}
+                >
+                  <X color={colors.onPrimary} size={14} />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
 
       </ScrollView>
+
+      {/* Category Selection Modal */}
+      <Modal visible={showCategoryModal} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setShowCategoryModal(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Category</Text>
+                </View>
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {CATEGORIES.map(cat => {
+                      const catKey = cat.replace(' ', '');
+                      const CatIcon = IconMap[catKey] || ShoppingBag;
+                      return (
+                        <TouchableOpacity
+                          key={cat}
+                          onPress={() => {
+                            setCategory(cat);
+                            setShowCategoryModal(false);
+                          }}
+                          style={[styles.catOption, {
+                            backgroundColor: category === cat ? colors.primary : colors.surfaceContainerHighest,
+                            padding: spacing.md,
+                            borderRadius: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 14
+                          }]}
+                        >
+                          <View style={[styles.miniIconBox, { backgroundColor: category === cat ? 'rgba(255,255,255,0.2)' : colors.surfaceContainerLow, width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }]}>
+                            <CatIcon color={category === cat ? colors.onPrimary : colors.primary} size={20} />
+                          </View>
+                          <Text style={{ flex: 1, color: category === cat ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }}>{cat}</Text>
+                          {category === cat && <Check color={colors.onPrimary} size={18} />}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
+                  <View style={{ marginTop: 20, gap: 12 }}>
+                    <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }}>CREATE NEW</Text>
+                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                      <TextInput
+                        value={newCatName}
+                        onChangeText={setNewCatName}
+                        placeholder="Category name..."
+                        placeholderTextColor={colors.onSurfaceVariant}
+                        style={{
+                          flex: 1,
+                          backgroundColor: colors.surfaceContainerHighest,
+                          borderRadius: 16,
+                          paddingHorizontal: 16,
+                          height: 56,
+                          color: colors.onSurface,
+                          fontFamily: 'Manrope_500Medium'
+                        }}
+                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (newCatName.trim()) {
+                            setCategory(newCatName);
+                            setShowCategoryModal(false);
+                            setNewCatName('');
+                          }
+                        }}
+                        style={{
+                          backgroundColor: colors.primary,
+                          borderRadius: 16,
+                          width: 56,
+                          height: 56,
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Plus color={colors.onPrimary} size={24} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Spent From Modal */}
+      <Modal visible={showSpentFromModal} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setShowSpentFromModal(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Spent From</Text>
+                </View>
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {PAYMENT_SOURCES.map(source => (
+                      <TouchableOpacity
+                        key={source.id}
+                        onPress={() => {
+                          setSpentFrom(source);
+                          setShowSpentFromModal(false);
+                        }}
+                        style={{
+                          backgroundColor: spentFrom.id === source.id ? colors.primary : colors.surfaceContainerHighest,
+                          padding: spacing.md,
+                          borderRadius: 20,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 14
+                        }}
+                      >
+                        <View style={{ backgroundColor: spentFrom.id === source.id ? 'rgba(255,255,255,0.2)' : colors.surfaceContainerLow, width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}>
+                          <source.icon color={spentFrom.id === source.id ? colors.onPrimary : colors.primary} size={20} />
+                        </View>
+                        <Text style={{ flex: 1, color: spentFrom.id === source.id ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>{source.name}</Text>
+                        {spentFrom.id === source.id && <Check color={colors.onPrimary} size={18} />}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Group Selection Modal */}
+      <Modal visible={showGroupModal} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setShowGroupModal(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Split with Group</Text>
+                </View>
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {groups.map(group => (
+                      <TouchableOpacity
+                        key={group.id}
+                        onPress={() => {
+                          setSelectedGroup(group);
+                          setShowGroupModal(false);
+                        }}
+                        style={{
+                          backgroundColor: colors.surfaceContainerHighest,
+                          padding: spacing.md,
+                          borderRadius: 20,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 14
+                        }}
+                      >
+                        <View style={{ backgroundColor: group.bgColor || colors.primaryContainer, width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }}>
+                          <Text style={{ fontSize: 20 }}>{group.emoji || '👥'}</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>{group.name}</Text>
+                          <Text style={{ color: colors.onSurfaceVariant, fontSize: 12 }}>{group.members} Members</Text>
+                        </View>
+                        <ChevronRight color={colors.onSurfaceVariant} size={18} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Date Picker Modal */}
+      <DateSelectionModal />
+
+      {/* Currency Selection Modal */}
+      <Modal visible={showCurrencyModal} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback onPress={() => setShowCurrencyModal(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Currency</Text>
+                </View>
+                <ScrollView style={{ maxHeight: 400 }} contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {SUPPORTED_CURRENCIES.map((cur: import('../src/context/CurrencyContext').Currency) => (
+                      <TouchableOpacity
+                        key={cur.code}
+                        onPress={() => { setCurrency(cur); setShowCurrencyModal(false); }}
+                        style={{
+                          backgroundColor: currency.code === cur.code ? colors.primary : colors.surfaceContainerHighest,
+                          padding: spacing.md,
+                          borderRadius: 20,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 14,
+                        }}
+                      >
+                        <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: currency.code === cur.code ? 'rgba(255,255,255,0.2)' : colors.surfaceContainerLow, alignItems: 'center', justifyContent: 'center' }}>
+                          <Text style={{ color: currency.code === cur.code ? colors.onPrimary : colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>{cur.symbol}</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <Text style={{ color: currency.code === cur.code ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>{cur.code}</Text>
+                          <Text style={{ color: currency.code === cur.code ? 'rgba(255,255,255,0.7)' : colors.onSurfaceVariant, fontSize: 13 }}>{cur.name}</Text>
+                        </View>
+                        {currency.code === cur.code && <Check color={colors.onPrimary} size={18} />}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -277,6 +767,32 @@ const styles = StyleSheet.create({
   fieldBody: {
     flex: 1,
   },
-  splitBtn: {},
+  primaryBtn: {
+    width: '100%',
+  },
+  secondaryBtn: {
+    width: '100%',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    maxHeight: '85%',
+  },
+  modalHeader: {
+    alignItems: 'center',
+  },
+  modalDrag: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center',
+  },
+  catOption: {
+    width: '100%',
+  },
+  miniIconBox: {},
 });
 

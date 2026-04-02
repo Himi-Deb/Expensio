@@ -35,6 +35,7 @@ export const tokens = {
     md: 16,
     lg: 24,
     xl: 32,
+    xxl: 40,
     full: 9999,
   },
   typography: {

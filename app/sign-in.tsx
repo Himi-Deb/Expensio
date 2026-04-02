@@ -5,10 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Shield, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react-native';
 import { useState } from 'react';
 import { handleOAuthLogin, loginUser } from '../src/services/auth';
+import { useTransactions } from '../src/context/TransactionContext';
+import { USE_MOCK_AUTH } from '../src/services/firebaseConfig';
 
 export default function SignInScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
+  const { seedMockOverviewData } = useTransactions();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -36,7 +39,10 @@ export default function SignInScreen() {
       const response = await loginUser({ identifier: cleanId, password });
 
       if (response.success) {
-        // Bypass native callbacks and push securely
+        // Automatically seed data if in Mock mode to give the user a rich initial experience
+        if (USE_MOCK_AUTH) {
+          seedMockOverviewData();
+        }
         router.replace('/(tabs)');
       } else {
         setErrorText(response.message || 'Invalid credentials.');
@@ -84,6 +90,13 @@ export default function SignInScreen() {
             </View>
             <Text style={[styles.title, { color: colors.onSurface }]}>Welcome Back</Text>
             <Text style={[styles.subtitle, { color: colors.onSurfaceVariant }]}>Enter your credentials to access your vault</Text>
+            
+            {USE_MOCK_AUTH && (
+              <View style={{ backgroundColor: 'rgba(115, 255, 227, 0.1)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, marginTop: 16, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.primary }} />
+                <Text style={{ color: colors.primary, fontSize: 10, fontFamily: 'Manrope_700Bold', letterSpacing: 1 }}>DEMO MODE ACTIVE</Text>
+              </View>
+            )}
           </View>
 
           {/* Form */}

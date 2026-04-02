@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck } from 'lucide-react-native';
+import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck, Globe } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useTransactions } from '../../src/context/TransactionContext';
 import { smsService } from '../../src/services/smsService';
@@ -15,12 +15,27 @@ const IconMap: Record<string, any> = {
   Home,
   Activity,
   CircleDollarSign,
+  ShoppingCart: ShoppingBag,
+  Zap: Activity,
+  Plane: Activity,
+  Globe,
 };
 
 export default function DashboardScreen() {
   const { colors, spacing, borderRadius } = useTheme();
   const router = useRouter();
-  const { transactions, hasSmsConsent, setSmsConsent, isLoadingSms, syncSmsTransactions } = useTransactions();
+  const { 
+    transactions, 
+    hasSmsConsent, 
+    setSmsConsent, 
+    isLoadingSms, 
+    syncSmsTransactions,
+    categoryBudgets,
+    globalBudget
+  } = useTransactions();
+
+  const totalSpent = transactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+  const globalProgress = globalBudget ? Math.min(totalSpent / globalBudget, 1) : 0;
 
   const handleManualScan = async () => {
     if (hasSmsConsent) {
@@ -68,7 +83,7 @@ export default function DashboardScreen() {
             <View>
               <Text style={[styles.cardLabel, { color: colors.onPrimary, opacity: 0.65, marginBottom: 6 }]}>TOTAL SPENT</Text>
               <Text style={[styles.mainBalance, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 38, letterSpacing: -1.5 }]}>
-                ₹84,240.15
+                ₹{totalSpent.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </Text>
             </View>
             <View style={[styles.iconButton, { backgroundColor: 'rgba(0,0,0,0.15)', borderRadius: borderRadius.sm, padding: 10 }]}>
@@ -82,7 +97,9 @@ export default function DashboardScreen() {
               <Text style={[styles.vaultIdData, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>**** 9012</Text>
             </View>
 
-            <TouchableOpacity style={[styles.analysisBtn, {
+            <TouchableOpacity 
+              onPress={() => router.push('/activity')}
+              style={[styles.analysisBtn, {
               backgroundColor: 'rgba(0,0,0,0.2)',
               borderRadius: borderRadius.full,
               paddingHorizontal: 18,
@@ -95,6 +112,17 @@ export default function DashboardScreen() {
               <ArrowRight color={colors.onPrimary} size={14} />
             </TouchableOpacity>
           </View>
+          {globalBudget && (
+            <View style={{ marginTop: spacing.xl }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+                <Text style={{ color: colors.onPrimary, fontSize: 10, fontFamily: 'Manrope_500Medium', opacity: 0.8 }}>MONTHLY LIMIT</Text>
+                <Text style={{ color: colors.onPrimary, fontSize: 10, fontFamily: 'Manrope_700Bold' }}>{Math.round(globalProgress * 100)}%</Text>
+              </View>
+              <View style={{ height: 6, backgroundColor: 'rgba(0,0,0,0.15)', borderRadius: 3 }}>
+                <View style={{ height: '100%', backgroundColor: colors.onPrimary, borderRadius: 3, width: `${globalProgress * 100}%` }} />
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Budget Section */}
@@ -107,7 +135,11 @@ export default function DashboardScreen() {
           </Text>
         </View>
 
-        <View style={styles.budgetRow}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={[styles.budgetRow, { gap: 14 }]}
+        >
           {/* Create Budget Card */}
           <TouchableOpacity
             style={[styles.createBudgetCard, {
@@ -115,6 +147,7 @@ export default function DashboardScreen() {
               borderStyle: 'dashed',
               borderWidth: 1.5,
               borderRadius: borderRadius.xl,
+              width: 140,
             }]}
             onPress={() => router.push('/create-budget')}
           >
@@ -128,28 +161,38 @@ export default function DashboardScreen() {
               marginTop: 14,
               letterSpacing: 1,
             }]}>
-              CREATE BUDGET
+              CREATE
             </Text>
           </TouchableOpacity>
 
-          {/* Dining Budget Card */}
-          <View style={[styles.budgetCard, {
-            backgroundColor: colors.surfaceContainerLow,
-            borderRadius: borderRadius.xl,
-            padding: spacing.md,
-          }]}>
-            <View style={[styles.budgetIconBox, { backgroundColor: colors.primaryContainer, borderRadius: 12 }]}>
-              <Utensils color={colors.primary} size={18} />
-            </View>
-            <View style={{ marginTop: spacing.md }}>
-              <Text style={[styles.budgetCat, { color: colors.onSurfaceVariant, fontSize: 10, letterSpacing: 1.2, marginBottom: 4 }]}>DINING</Text>
-              <Text style={[styles.budgetAmt, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20 }]}>₹18,400</Text>
-            </View>
-            <View style={[styles.progressBarBg, { backgroundColor: colors.surfaceContainerHighest, marginTop: spacing.md }]}>
-              <View style={[styles.progressBarFill, { backgroundColor: colors.primary, width: '60%' }]} />
-            </View>
-          </View>
-        </View>
+          {/* Dynamic Budget Cards */}
+          {categoryBudgets.map((budget) => {
+            const progress = Math.min(budget.spent / budget.limit, 1);
+            return (
+              <View key={budget.id} style={[styles.budgetCard, {
+                backgroundColor: colors.surfaceContainerLow,
+                borderRadius: borderRadius.xl,
+                padding: spacing.md,
+                width: 140,
+              }]}>
+                <View style={[styles.budgetIconBox, { backgroundColor: colors.primaryContainer, borderRadius: 12 }]}>
+                  <Utensils color={colors.primary} size={18} />
+                </View>
+                <View style={{ marginTop: spacing.md }}>
+                  <Text style={[styles.budgetCat, { color: colors.onSurfaceVariant, fontSize: 10, letterSpacing: 1.2, marginBottom: 4, textTransform: 'uppercase' }]}>
+                    {budget.category}
+                  </Text>
+                  <Text style={[styles.budgetAmt, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 18 }]}>
+                    ₹{budget.limit.toLocaleString('en-IN')}
+                  </Text>
+                </View>
+                <View style={[styles.progressBarBg, { backgroundColor: colors.surfaceContainerHighest, marginTop: spacing.md }]}>
+                  <View style={[styles.progressBarFill, { backgroundColor: colors.primary, width: `${progress * 100}%` }]} />
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
 
         {/* Recent Activity Section */}
         <View style={[styles.sectionHeader, { marginTop: spacing.xxl }]}>
@@ -208,27 +251,32 @@ export default function DashboardScreen() {
               const IconComponent = IconMap[tx.iconName] || CircleDollarSign;
               return (
                 <View key={tx.id}>
-                  <View style={[styles.txItem, { paddingVertical: 14 }]}>
-                    <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
-                      <IconComponent color={colors.onSurfaceVariant} size={20} />
-                    </View>
-                    <View style={styles.txInfo}>
-                      <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
-                      <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.category} • {tx.date}</Text>
-                    </View>
-                    <View style={styles.txAmounts}>
-                      <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>
-                        {tx.amount < 0 ? `-₹${Math.abs(tx.amount).toFixed(2)}` : `+₹${tx.amount.toFixed(2)}`}
-                      </Text>
-                      <View style={[styles.txStatusBadge, {
-                        backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
-                      }]}>
-                        <Text style={[styles.txStatusText, {
-                          color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
-                        }]}>{tx.status}</Text>
+                  <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={() => router.push({ pathname: '/transaction-detail', params: { id: tx.id } })}
+                  >
+                    <View style={[styles.txItem, { paddingVertical: 14 }]}>
+                      <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHigh }]}>
+                        <IconComponent color={colors.onSurfaceVariant} size={20} />
+                      </View>
+                      <View style={styles.txInfo}>
+                        <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
+                        <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.category} • {tx.date}</Text>
+                      </View>
+                      <View style={styles.txAmounts}>
+                        <Text style={[styles.txAmt, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15, marginBottom: 5 }]}>
+                          {tx.amount < 0 ? `-₹${Math.abs(tx.amount).toFixed(2)}` : `+₹${tx.amount.toFixed(2)}`}
+                        </Text>
+                        <View style={[styles.txStatusBadge, {
+                          backgroundColor: tx.status === 'CLEARED' ? colors.primaryContainer : colors.surfaceContainerHighest,
+                        }]}>
+                          <Text style={[styles.txStatusText, {
+                            color: tx.status === 'CLEARED' ? colors.primary : colors.onSurfaceVariant,
+                          }]}>{tx.status}</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                   {idx < transactions.length - 1 && (
                     <View style={[styles.separator, { backgroundColor: colors.outline }]} />
                   )}

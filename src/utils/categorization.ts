@@ -1,7 +1,7 @@
 // src/utils/categorization.ts
 // Intelligent Splitwise-style heuristic categorizer for transaction merchants
 
-export type TransactionIcon = 'Coffee' | 'Car' | 'ShoppingBag' | 'Utensils' | 'Monitor' | 'Home' | 'Activity' | 'CircleDollarSign';
+export type TransactionIcon = 'Coffee' | 'Car' | 'ShoppingBag' | 'Utensils' | 'Monitor' | 'Home' | 'Activity' | 'CircleDollarSign' | 'Zap' | 'Plane' | 'Globe';
 
 export interface CategoryResult {
   category: string;

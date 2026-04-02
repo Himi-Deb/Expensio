@@ -2,14 +2,16 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 
 import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Wallet, Utensils, Car, ShoppingCart, Zap, Home, Plane } from 'lucide-react-native';
-import { useState, useRef } from 'react';
+import { Wallet, Utensils, Car, ShoppingCart, Zap, Home, Plane, Globe } from 'lucide-react-native';
+import { useState, useRef, useEffect } from 'react';
 import { PanResponder } from 'react-native';
+import { useTransactions } from '../src/context/TransactionContext';
 
 const MAX_BUDGET = 100000;
 const MIN_BUDGET = 0;
 
 const CATEGORIES = [
+  { id: 'global', label: 'Global Monthly', icon: Globe },
   { id: 'shopping', label: 'Shopping', icon: ShoppingCart },
   { id: 'dining', label: 'Dining', icon: Utensils },
   { id: 'transport', label: 'Transport', icon: Car },
@@ -28,8 +30,9 @@ export default function CreateBudgetScreen() {
 
   const [budgetValue, setBudgetValue] = useState(25000);
   const [budgetName, setBudgetName] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('shopping');
+  const [selectedCategory, setSelectedCategory] = useState('global');
   const [sliderWidth, setSliderWidth] = useState(0);
+  const { addCategoryBudget, setGlobalBudget } = useTransactions();
 
   const progress = (budgetValue - MIN_BUDGET) / (MAX_BUDGET - MIN_BUDGET);
 
@@ -127,15 +130,16 @@ export default function CreateBudgetScreen() {
         </View>
 
         {/* Budget Name Input */}
-        <View style={{ paddingHorizontal: spacing.xl, marginTop: 40 }}>
+        <View style={{ paddingHorizontal: spacing.xl, marginTop: 40, opacity: selectedCategory === 'global' ? 0.3 : 1 }}>
           <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 11, letterSpacing: 1.2, marginBottom: 12 }}>
             BUDGET NAME
           </Text>
           <TextInput
-            value={budgetName}
+            value={selectedCategory === 'global' ? 'Main Monthly Limit' : budgetName}
             onChangeText={setBudgetName}
             placeholder="e.g. Monthly Groceries"
             placeholderTextColor={colors.onSurfaceVariant}
+            editable={selectedCategory !== 'global'}
             style={{
               color: colors.onSurface,
               fontFamily: 'Manrope_400Regular',
@@ -209,10 +213,21 @@ export default function CreateBudgetScreen() {
               elevation: 10,
             }}
             activeOpacity={0.85}
-            onPress={() => router.back()}
+            onPress={() => {
+              if (selectedCategory === 'global') {
+                setGlobalBudget(budgetValue);
+              } else {
+                addCategoryBudget({
+                  category: CATEGORIES.find(c => c.id === selectedCategory)?.label || 'Other',
+                  limit: budgetValue,
+                  name: budgetName || selectedCategory,
+                });
+              }
+              router.back();
+            }}
           >
             <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 18 }}>
-              Create Budget
+              {selectedCategory === 'global' ? 'Set Global Limit' : 'Create Budget'}
             </Text>
           </TouchableOpacity>
 

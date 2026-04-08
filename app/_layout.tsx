@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 import { ThemeContext, theme } from '../src/theme/theme';
 import {
   useFonts,
@@ -37,6 +38,14 @@ export default function RootLayout() {
 
   return (
     <ThemeContext.Provider value={theme}>
+      {Platform.OS === 'web' && (
+        <style dangerouslySetInnerHTML={{ __html: `
+          input:focus, textarea:focus, select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+        `}} />
+      )}
       <CurrencyProvider>
         <GroupProvider>
           <TransactionProvider>

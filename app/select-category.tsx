@@ -73,6 +73,9 @@ export default function SelectCategoryScreen() {
           onChangeText={setQuery}
           placeholder="Search categories..."
           placeholderTextColor={colors.onSurfaceVariant}
+          selectionColor={colors.primary}
+          cursorColor={colors.primary}
+          underlineColorAndroid="transparent"
           style={[styles.searchInput, {
             flex: 1,
             color: colors.onSurface,
@@ -138,6 +141,9 @@ export default function SelectCategoryScreen() {
                 onChangeText={setCustomName}
                 placeholder="Category name (e.g. Subscriptions)"
                 placeholderTextColor={colors.onSurfaceVariant}
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
                 style={[styles.customInput, {
                   color: colors.onSurface,
                   fontFamily: 'Manrope_400Regular',

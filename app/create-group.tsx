@@ -83,6 +83,9 @@ export default function CreateGroupScreen() {
                   style={[styles.input, { color: colors.onSurface }]}
                   placeholder="e.g. Weekend Warriors"
                   placeholderTextColor={colors.onSurfaceVariant}
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={groupName}
                   onChangeText={setGroupName}
                 />
@@ -94,6 +97,9 @@ export default function CreateGroupScreen() {
                   style={[styles.input, { color: colors.onSurface }]}
                   placeholder="What's this group about?"
                   placeholderTextColor={colors.onSurfaceVariant}
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={description}
                   onChangeText={setDescription}
                 />
@@ -186,6 +192,9 @@ export default function CreateGroupScreen() {
                   style={[styles.searchInput, { color: colors.onSurface }]}
                   placeholder="Search contacts or ID..."
                   placeholderTextColor={colors.onSurfaceVariant}
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                 />
               </View>
 

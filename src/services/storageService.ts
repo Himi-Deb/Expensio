@@ -11,7 +11,8 @@ import { TransactionIcon } from '../utils/categorization';
 
 export interface MaskedRecord {
   id: string;
-  name: string;      // Masked Name (e.g. "Merchant_M_123")
+  name: string;      // Clear name for display (encrypted at rest)
+  originalName?: string; 
   amount: number;
   category: string;
   date: string;
@@ -28,14 +29,13 @@ class StorageService {
    * Before a transaction is saved, it is de-identified.
    */
   maskTransaction(tx: any): MaskedRecord {
-    // 1. Identify Merchant Patterns
-    const merchantHash = this.generateStableHash(tx.name);
-    // 2. Identify Account Patterns (A/c ending 1234 -> ****)
+    // 1. Account Masking: Identify Account Patterns (A/c ending 1234 -> ****)
+    // We only mask the source IDs to keep sensitive bank details private in the UI
     const maskedSource = tx.source ? tx.source.replace(/\d{2,10}/g, '****') : '****';
 
     return {
       ...tx,
-      name: `Merchant_${merchantHash}`, // Total de-identification
+      name: tx.name, // Keep clear name for user accessibility (still encrypted in storage)
       source: maskedSource,
     };
   }

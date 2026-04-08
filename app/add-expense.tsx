@@ -41,6 +41,9 @@ export default function AddExpenseScreen() {
               style={[styles.amountInput, { color: colors.onSurface, fontSize: 48, fontFamily: 'Manrope_700Bold' }]}
               keyboardType="decimal-pad"
               autoFocus
+              selectionColor={colors.primary}
+              cursorColor={colors.primary}
+              underlineColorAndroid="transparent"
             />
           </View>
         </View>
@@ -49,7 +52,13 @@ export default function AddExpenseScreen() {
         <View style={styles.form}>
            <Text style={[styles.label, { color: colors.onSurfaceVariant, marginBottom: spacing.sm }]}>DESCRIPTION</Text>
            <View style={[styles.inputBox, { backgroundColor: colors.surfaceContainerHigh, borderRadius: borderRadius.md, padding: spacing.md, marginBottom: spacing.lg }]}>
-              <TextInput placeholder="Dinner at Olive" style={{ fontFamily: 'Manrope_400Regular', fontSize: 16 }} />
+              <TextInput 
+                placeholder="Dinner at Olive" 
+                style={{ fontFamily: 'Manrope_400Regular', fontSize: 16, color: colors.onSurface }} 
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
+              />
            </View>
 
            <Text style={[styles.label, { color: colors.onSurfaceVariant, marginBottom: spacing.sm }]}>GROUP</Text>

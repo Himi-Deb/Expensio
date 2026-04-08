@@ -140,6 +140,9 @@ export default function CreateBudgetScreen() {
             placeholder="e.g. Monthly Groceries"
             placeholderTextColor={colors.onSurfaceVariant}
             editable={selectedCategory !== 'global'}
+            selectionColor={colors.primary}
+            cursorColor={colors.primary}
+            underlineColorAndroid="transparent"
             style={{
               color: colors.onSurface,
               fontFamily: 'Manrope_400Regular',

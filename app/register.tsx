@@ -128,6 +128,9 @@ export default function RegisterScreen() {
                   style={[styles.input, { color: colors.onSurface }]}
                   placeholder="Please enter your full name"
                   placeholderTextColor={colors.surfaceContainerHighest}
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={fullName}
                   onChangeText={setFullName}
                   editable={!isLoading}
@@ -143,6 +146,9 @@ export default function RegisterScreen() {
                   placeholder="Please enter the preferred user name"
                   placeholderTextColor={colors.surfaceContainerHighest}
                   autoCapitalize="none"
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={username}
                   onChangeText={setUsername}
                   editable={!isLoading}
@@ -159,6 +165,9 @@ export default function RegisterScreen() {
                   placeholderTextColor={colors.surfaceContainerHighest}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={email}
                   onChangeText={setEmail}
                   editable={!isLoading}
@@ -171,9 +180,12 @@ export default function RegisterScreen() {
               <View style={[styles.inputGroup, { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.lg }]}>
                 <TextInput 
                   style={[styles.input, { color: colors.onSurface }]}
-                  placeholder="Min. 8 characters"
+                  placeholder="Password"
                   placeholderTextColor={colors.surfaceContainerHighest}
                   secureTextEntry={!showPassword}
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                   value={password}
                   onChangeText={setPassword}
                   editable={!isLoading}

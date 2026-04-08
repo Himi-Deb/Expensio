@@ -107,6 +107,9 @@ export default function SelectGroupScreen() {
           onChangeText={setQuery}
           placeholder="Search groups or friends..."
           placeholderTextColor={colors.onSurfaceVariant}
+          selectionColor={colors.primary}
+          cursorColor={colors.primary}
+          underlineColorAndroid="transparent"
           style={[styles.searchInput, {
             flex: 1,
             color: colors.onSurface,

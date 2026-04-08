@@ -13,23 +13,50 @@ import { useTheme } from '../src/theme/theme';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  X, Utensils, CreditCard, Calendar, Camera, Users,
   ChevronDown, Coffee, Car, ShoppingBag, Monitor,
   Home, Activity, CircleDollarSign, Zap, Plane, Globe,
-  ChevronRight, Plus, Heart, Tv, ShoppingCart, Building2, Check, Paperclip
+  ChevronRight, Plus, Heart, Tv, ShoppingCart, Building2, Check, Paperclip, 
+  Utensils, X, CreditCard, Calendar, Camera, Users
 } from 'lucide-react-native';
 import { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { useTransactions } from '../src/context/TransactionContext';
 import { useGroups } from '../src/context/GroupContext';
 import { useCurrency, SUPPORTED_CURRENCIES } from '../src/context/CurrencyContext';
-import { autoCategorizeTransaction, TransactionIcon } from '../src/utils/categorization';
+import { autoCategorizeTransaction, TransactionIcon, getIconForCategory } from '../src/utils/categorization';
 
 // Icon Map for Dynamic Rendering (Matching Detail Page)
 const IconMap: { [key: string]: any } = {
-  Utensils, ShoppingBag, Coffee, Car, Monitor, Zap, Plane, Globe, Users, Building2,
-  Health: Heart, Entertainment: Tv, ShoppingCart, Travel: Plane, DiningOut: Utensils,
-  Transport: Car, Utilities: Zap, General: CircleDollarSign
+  'Coffee': Coffee,
+  'Car': Car,
+  'ShoppingBag': ShoppingBag,
+  'Utensils': Utensils,
+  'Monitor': Monitor,
+  'Home': Home,
+  'Activity': Activity,
+  'CircleDollarSign': CircleDollarSign,
+  'Zap': Zap,
+  'Plane': Plane,
+  'Globe': Globe,
+  'ShoppingCart': ShoppingBag,
+  'Heart': Heart,
+  'Tv': Tv,
+  'DiningOut': Utensils,
+  'DiningOutIcon': Utensils,
+  'Shopping': ShoppingBag,
+  'ShoppingIcon': ShoppingBag,
+  'Transport': Car,
+  'TransportIcon': Car,
+  'Utilities': Zap,
+  'UtilitiesIcon': Zap,
+  'Travel': Plane,
+  'TravelIcon': Plane,
+  'Electronics': Monitor,
+  'ElectronicsIcon': Monitor,
+  'Entertainment': Tv,
+  'EntertainmentIcon': Tv,
+  'Health': Heart,
+  'General': CircleDollarSign
 };
 
 const CATEGORIES = [
@@ -310,6 +337,9 @@ export default function NewTransactionScreen() {
               placeholder="0.00"
               placeholderTextColor={colors.surfaceContainerHighest}
               keyboardType="decimal-pad"
+              selectionColor={colors.primary}
+              cursorColor={colors.primary}
+              underlineColorAndroid="transparent"
               style={{
                 color: colors.onSurface,
                 fontFamily: 'Manrope_700Bold',
@@ -336,6 +366,9 @@ export default function NewTransactionScreen() {
               onChangeText={setMerchantName}
               placeholder="Who did you pay?"
               placeholderTextColor={colors.onSurfaceVariant}
+              selectionColor={colors.primary}
+              cursorColor={colors.primary}
+              underlineColorAndroid="transparent"
               style={{
                 color: colors.onSurface,
                 fontFamily: 'Manrope_600SemiBold',
@@ -451,40 +484,32 @@ export default function NewTransactionScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Remarks Section */}
-        <View style={{ paddingHorizontal: spacing.xl, marginTop: 8 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }}>REMARKS</Text>
-            <TouchableOpacity onPress={pickImage} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Paperclip color={colors.primary} size={16} />
-              <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 12 }}>Add Image</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={[{
-            backgroundColor: colors.surfaceContainerLow,
-            borderRadius: borderRadius.lg,
-            padding: spacing.lg,
-          }]}>
+        {/* Notes & Evidence - Unified Card */}
+        <View style={[styles.detailCard, { paddingHorizontal: spacing.xl, marginTop: 24, gap: 12 }]}>
+          <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1, marginBottom: 4 }]}>
+            NOTES & EVIDENCE
+          </Text>
+          <View style={[styles.notesUnified, { backgroundColor: colors.surfaceContainerLow, borderRadius: 24, padding: 20 }]}>
             <TextInput
-              multiline
               value={remarks}
               onChangeText={setRemarks}
               placeholder="Add a note about this transaction..."
               placeholderTextColor={colors.onSurfaceVariant}
-              style={{
+              multiline
+              selectionColor={colors.primary}
+              cursorColor={colors.primary}
+              underlineColorAndroid="transparent"
+              style={[styles.noteInput, {
                 color: colors.onSurface,
-                fontFamily: 'Manrope_500Medium',
+                fontFamily: 'Manrope_400Regular',
                 fontSize: 15,
-                lineHeight: 22,
                 minHeight: 80,
-                textAlignVertical: 'top',
-                marginBottom: attachment ? 16 : 0,
-              }}
+                textAlignVertical: 'top'
+              }]}
             />
 
             {attachment && (
-              <View style={{ position: 'relative', width: 80, height: 80 }}>
+              <View style={{ position: 'relative', width: 80, height: 80, marginTop: 16 }}>
                 <Image
                   source={{ uri: attachment }}
                   style={{ width: 80, height: 80, borderRadius: 12 }}
@@ -504,6 +529,19 @@ export default function NewTransactionScreen() {
                 </TouchableOpacity>
               </View>
             )}
+
+            {/* Add Attachment Row */}
+            <View style={[styles.attachRow, { marginTop: 12, borderTopWidth: 1, borderTopColor: colors.outlineVariant, paddingTop: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+              <TouchableOpacity
+                onPress={pickImage}
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
+              >
+                <Camera color={colors.onSurfaceVariant} size={20} />
+                <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 14 }}>
+                  {attachment ? 'Change Attachment' : 'Add Attachment'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -517,7 +555,7 @@ export default function NewTransactionScreen() {
               <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
                 <View style={[styles.modalHeader, { padding: spacing.lg }]}>
                   <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
-                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Category</Text>
+                  <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Category</Text>
                 </View>
                 <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
                   <View style={{ gap: 10 }}>
@@ -529,6 +567,7 @@ export default function NewTransactionScreen() {
                           key={cat}
                           onPress={() => {
                             setCategory(cat);
+                            setIconName(getIconForCategory(cat));
                             setShowCategoryModal(false);
                           }}
                           style={[styles.catOption, {
@@ -558,6 +597,9 @@ export default function NewTransactionScreen() {
                         onChangeText={setNewCatName}
                         placeholder="Category name..."
                         placeholderTextColor={colors.onSurfaceVariant}
+                        selectionColor={colors.primary}
+                        cursorColor={colors.primary}
+                        underlineColorAndroid="transparent"
                         style={{
                           flex: 1,
                           backgroundColor: colors.surfaceContainerHighest,
@@ -572,6 +614,7 @@ export default function NewTransactionScreen() {
                         onPress={() => {
                           if (newCatName.trim()) {
                             setCategory(newCatName);
+                            setIconName(getIconForCategory(newCatName));
                             setShowCategoryModal(false);
                             setNewCatName('');
                           }
@@ -794,5 +837,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   miniIconBox: {},
+  detailCard: {},
+  fieldLabel: {},
+  notesUnified: {},
+  noteInput: {},
+  attachRow: {},
 });
 

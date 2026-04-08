@@ -3,8 +3,8 @@ import { useTheme } from '../../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ChevronLeft, Search, TrendingUp, Utensils, Coffee, Sandwich, Wine, ShoppingBasket,
-  CreditCard, AlertCircle, ShoppingBag, Car, Zap, Home, Activity, CircleDollarSign,
-  Globe, Monitor
+  CreditCard, AlertCircle, ShoppingBag, Car, Home, Activity, CircleDollarSign,
+  Globe, Monitor, Zap, Plane, Heart, Tv, ShoppingCart
 } from 'lucide-react-native';
 import Svg, { G, Circle, Path } from 'react-native-svg';
 import { useTransactions } from '../../src/context/TransactionContext'; 
@@ -14,23 +14,42 @@ import { useCurrency, SUPPORTED_CURRENCIES } from '../../src/context/CurrencyCon
 import React, { useMemo } from 'react';
 
 const IconMap: Record<string, any> = {
-  Coffee,
-  Car,
-  ShoppingBag,
-  Utensils,
-  Monitor,
-  Home,
-  Activity,
-  CircleDollarSign,
-  ShoppingCart: ShoppingBag,
-  Zap: Activity,
-  Plane: Activity,
-  Globe,
+  'Coffee': Coffee,
+  'Car': Car,
+  'ShoppingBag': ShoppingBag,
+  'Utensils': Utensils,
+  'Monitor': Monitor,
+  'Home': Home,
+  'Activity': Activity,
+  'CircleDollarSign': CircleDollarSign,
+  'Zap': Zap,
+  'Plane': Plane,
+  'Globe': Globe,
+  'ShoppingCart': ShoppingBag,
+  'Heart': Heart,
+  'Tv': Tv,
+  'DiningOut': Utensils,
+  'DiningOutIcon': Utensils,
+  'Shopping': ShoppingBag,
+  'ShoppingIcon': ShoppingBag,
+  'Transport': Car,
+  'TransportIcon': Car,
+  'Utilities': Zap,
+  'UtilitiesIcon': Zap,
+  'Travel': Plane,
+  'TravelIcon': Plane,
+  'Electronics': Monitor,
+  'ElectronicsIcon': Monitor,
+  'Entertainment': Tv,
+  'EntertainmentIcon': Tv,
+  'Health': Heart,
+  'General': CircleDollarSign
 };
 
 type Transaction = {
   id: string;
   name: string;
+  originalName?: string;
   category: string;
   amount: number;
   date: string;
@@ -212,12 +231,12 @@ export default function ActivityScreen() {
                         <View style={[styles.txIconBox, { backgroundColor: colors.surfaceContainerHighest }]}>
                            {(() => {
                               const IconComponent = IconMap[tx.iconName || ''] || Activity;
-                              return <IconComponent color={colors.onSurfaceVariant} size={18} />;
+                              return <IconComponent color={colors.onSurfaceVariant} size={20} />;
                            })()}
                         </View>
                         <View style={styles.txInfo}>
                           <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>
-                            {tx.name}
+                            {tx.name || tx.originalName}
                           </Text>
                           <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>
                             {tx.category} • {tx.status}

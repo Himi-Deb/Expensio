@@ -116,6 +116,9 @@ export default function SignInScreen() {
                 placeholderTextColor={colors.onSurfaceVariant}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
                 value={identifier}
                 onChangeText={setIdentifier}
                 editable={!isLoading}
@@ -129,6 +132,9 @@ export default function SignInScreen() {
                 placeholder="Password"
                 placeholderTextColor={colors.onSurfaceVariant}
                 secureTextEntry={!showPassword}
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
                 value={password}
                 onChangeText={setPassword}
                 editable={!isLoading}

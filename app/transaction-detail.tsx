@@ -12,7 +12,8 @@ import {
   ChevronLeft, Pencil, Users, Building2,
   Calendar, MessageSquare, Camera, Paperclip,
   Zap, Plane, Globe, ShoppingBag, Coffee, Car, Monitor,
-  Utensils, X, Plus, Clock, ChevronRight, Heart, Tv, ShoppingCart
+  Utensils, X, Plus, Clock, ChevronRight, Heart, Tv, ShoppingCart,
+  Home, Activity, CircleDollarSign
 } from 'lucide-react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useMemo, useEffect } from 'react';
@@ -21,12 +22,40 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTransactions } from '../src/context/TransactionContext';
 import { useGroups } from '../src/context/GroupContext';
+import { getIconForCategory } from '../src/utils/categorization';
 
 // Icon Map for Dynamic Rendering
 const IconMap: { [key: string]: any } = {
-  Utensils, ShoppingBag, Coffee, Car, Monitor, Zap, Plane, Globe, Users, Building2,
-  Health: Heart, Entertainment: Tv, ShoppingCart, Travel: Plane, DiningOut: Utensils,
-  Transport: Car, Utilities: Zap
+  'Coffee': Coffee,
+  'Car': Car,
+  'ShoppingBag': ShoppingBag,
+  'Utensils': Utensils,
+  'Monitor': Monitor,
+  'Home': Home,
+  'Activity': Activity,
+  'CircleDollarSign': CircleDollarSign,
+  'Zap': Zap,
+  'Plane': Plane,
+  'Globe': Globe,
+  'ShoppingCart': ShoppingBag,
+  'Heart': Heart,
+  'Tv': Tv,
+  'DiningOut': Utensils,
+  'DiningOutIcon': Utensils,
+  'Shopping': ShoppingBag,
+  'ShoppingIcon': ShoppingBag,
+  'Transport': Car,
+  'TransportIcon': Car,
+  'Utilities': Zap,
+  'UtilitiesIcon': Zap,
+  'Travel': Plane,
+  'TravelIcon': Plane,
+  'Electronics': Monitor,
+  'ElectronicsIcon': Monitor,
+  'Entertainment': Tv,
+  'EntertainmentIcon': Tv,
+  'Health': Heart,
+  'General': CircleDollarSign
 };
 
 const CATEGORIES = [
@@ -39,7 +68,7 @@ export default function TransactionDetailScreen() {
   const { id } = useLocalSearchParams();
   const { transactions, updateTransaction } = useTransactions();
   const { groups } = useGroups();
-  
+
   // High-Fidelity State
   const [note, setNote] = useState('');
   const [merchantName, setMerchantName] = useState('');
@@ -48,7 +77,7 @@ export default function TransactionDetailScreen() {
   const [txDate, setTxDate] = useState(new Date());
   const [attachment, setAttachment] = useState<string | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
-  
+
   // Modal State
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showGroupModal, setShowGroupModal] = useState(false);
@@ -83,7 +112,7 @@ export default function TransactionDetailScreen() {
 
   const handleUpdate = (updates: any) => {
     if (transaction.id && typeof transaction.id === 'string') {
-        updateTransaction(transaction.id, updates);
+      updateTransaction(transaction.id, updates);
     }
   };
 
@@ -138,55 +167,56 @@ export default function TransactionDetailScreen() {
           }]}>
             ₹{Math.abs(transaction.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </Text>
-          
+
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 8 }}>
             {isEditingMerchant ? (
-                <TextInput
-                    value={merchantName}
-                    autoFocus
-                    onChangeText={(val) => {
-                        setMerchantName(val);
-                        handleUpdate({ name: val });
-                    }}
-                    onBlur={() => setIsEditingMerchant(false)}
-                    style={[styles.heromerchant, {
-                        color: colors.onSurface,
-                        fontFamily: 'Manrope_600SemiBold',
-                        fontSize: 18,
-                        textAlign: 'center',
-                        borderBottomWidth: 1,
-                        borderBottomColor: colors.primary,
-                        minWidth: 200,
-                    }]}
-                />
+              <TextInput
+                value={merchantName}
+                autoFocus
+                onChangeText={(val) => {
+                  setMerchantName(val);
+                  handleUpdate({ name: val });
+                }}
+                onBlur={() => setIsEditingMerchant(false)}
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
+                style={[styles.heromerchant, {
+                  color: colors.onSurface,
+                  fontFamily: 'Manrope_600SemiBold',
+                  fontSize: 18,
+                  textAlign: 'center',
+                  minWidth: 200,
+                }]}
+              />
             ) : (
-                <Text style={[styles.heromerchant, {
-                    color: colors.onSurfaceVariant,
-                    fontFamily: 'Manrope_500Medium',
-                    fontSize: 18,
-                    textAlign: 'center'
-                }]}>
-                    {merchantName}
-                </Text>
+              <Text style={[styles.heromerchant, {
+                color: colors.onSurfaceVariant,
+                fontFamily: 'Manrope_500Medium',
+                fontSize: 18,
+                textAlign: 'center'
+              }]}>
+                {transaction.name || merchantName}
+              </Text>
             )}
             <TouchableOpacity onPress={() => setIsEditingMerchant(!isEditingMerchant)}>
-                <Pencil color={colors.primary} size={16} />
+              <Pencil color={colors.primary} size={16} />
             </TouchableOpacity>
           </View>
-          
+
           {/* Category Pill - Clickable */}
-          <TouchableOpacity 
+          <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => setShowCategoryModal(true)}
             style={[styles.categoryPill, {
-                backgroundColor: colors.surfaceContainerHighest,
-                borderRadius: borderRadius.full,
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingHorizontal: 16,
-                paddingVertical: 10,
-                gap: 8,
-                marginTop: 24,
+              backgroundColor: colors.surfaceContainerHighest,
+              borderRadius: borderRadius.full,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              gap: 8,
+              marginTop: 24,
             }]}
           >
             <TransactionIcon color={colors.primary} size={14} />
@@ -203,53 +233,53 @@ export default function TransactionDetailScreen() {
 
         {/* Dynamic Split Action Area */}
         {selectedGroup ? (
-             <View style={[styles.groupCard, { 
-                backgroundColor: colors.surfaceContainerLow, 
-                padding: spacing.lg, 
-                borderRadius: 24, 
-                marginHorizontal: spacing.lg,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 16,
-                marginBottom: spacing.xl
-             }]}>
-                <View style={[styles.groupAvatar, { backgroundColor: selectedGroup.bgColor || colors.primaryContainer, width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }]}>
-                    <Text style={{ fontSize: 24 }}>{selectedGroup.emoji || '👥'}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 17 }}>{selectedGroup.name}</Text>
-                    <Text style={{ color: colors.onSurfaceVariant, fontSize: 13, marginTop: 2 }}>{selectedGroup.members} Members • {selectedGroup.status}</Text>
-                </View>
-                <TouchableOpacity onPress={() => setSelectedGroup(null)} style={{ padding: 8 }}>
-                    <X color={colors.onSurfaceVariant} size={22} />
-                </TouchableOpacity>
-             </View>
-        ) : (
-            <TouchableOpacity
-                style={[styles.splitBtn, {
-                    backgroundColor: colors.primary,
-                    borderRadius: 20,
-                    marginHorizontal: spacing.lg,
-                    paddingVertical: 18,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 12,
-                    marginBottom: spacing.xl,
-                    shadowColor: colors.primary,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowOpacity: 0.4,
-                    shadowRadius: 12,
-                    elevation: 10,
-                }]}
-                activeOpacity={0.85}
-                onPress={() => setShowGroupModal(true)}
-            >
-                <Users color={colors.onPrimary} size={22} />
-                <Text style={[styles.splitBtnText, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>
-                    Split with Group
-                </Text>
+          <View style={[styles.groupCard, {
+            backgroundColor: colors.surfaceContainerLow,
+            padding: spacing.lg,
+            borderRadius: 24,
+            marginHorizontal: spacing.lg,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 16,
+            marginBottom: spacing.xl
+          }]}>
+            <View style={[styles.groupAvatar, { backgroundColor: selectedGroup.bgColor || colors.primaryContainer, width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }]}>
+              <Text style={{ fontSize: 24 }}>{selectedGroup.emoji || '👥'}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 17 }}>{selectedGroup.name}</Text>
+              <Text style={{ color: colors.onSurfaceVariant, fontSize: 13, marginTop: 2 }}>{selectedGroup.members} Members • {selectedGroup.status}</Text>
+            </View>
+            <TouchableOpacity onPress={() => setSelectedGroup(null)} style={{ padding: 8 }}>
+              <X color={colors.onSurfaceVariant} size={22} />
             </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={[styles.splitBtn, {
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+              marginHorizontal: spacing.lg,
+              paddingVertical: 18,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 12,
+              marginBottom: spacing.xl,
+              shadowColor: colors.primary,
+              shadowOffset: { width: 0, height: 6 },
+              shadowOpacity: 0.4,
+              shadowRadius: 12,
+              elevation: 10,
+            }]}
+            activeOpacity={0.85}
+            onPress={() => setShowGroupModal(true)}
+          >
+            <Users color={colors.onPrimary} size={22} />
+            <Text style={[styles.splitBtnText, { color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }]}>
+              Split with Group
+            </Text>
+          </TouchableOpacity>
         )}
 
         {/* Detail Cards Section */}
@@ -276,7 +306,7 @@ export default function TransactionDetailScreen() {
           </View>
 
           {/* Transaction Date - Clickable */}
-          <TouchableOpacity 
+          <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => setShowDatePicker(true)}
             style={[styles.detailCard, { gap: 8, paddingBottom: 24, paddingTop: 0 }]}
@@ -285,10 +315,10 @@ export default function TransactionDetailScreen() {
               TRANSACTION DATE
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Text style={[styles.fieldValueLarge, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20 }]}>
-                    {txDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </Text>
-                <Calendar color={colors.primary} size={18} />
+              <Text style={[styles.fieldValueLarge, { color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20 }]}>
+                {txDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </Text>
+              <Calendar color={colors.primary} size={18} />
             </View>
             <Text style={[styles.fieldMeta, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_400Regular', fontSize: 14 }]}>
               8:42 PM
@@ -298,16 +328,16 @@ export default function TransactionDetailScreen() {
           {/* Source SMS - Clean Header */}
           <View style={[styles.detailCard, { gap: 12 }]}>
             <Text style={[styles.fieldLabel, { color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }]}>
-               SOURCE SMS
+              SOURCE SMS
             </Text>
             <View style={[styles.smsBody, { backgroundColor: colors.surfaceContainerHighest, borderRadius: 24, padding: 24 }]}>
-              <Text style={[styles.smsText, { 
-                color: colors.onSurfaceVariant, 
-                fontFamily: 'Manrope_400Regular', 
-                fontSize: 14, 
+              <Text style={[styles.smsText, {
+                color: colors.onSurfaceVariant,
+                fontFamily: 'Manrope_400Regular',
+                fontSize: 14,
                 lineHeight: 22,
               }]}>
-                Vp-ICICIB: Acct XX9012 debited for INR {Math.abs(transaction.amount).toLocaleString('en-IN')} on {transaction.date}. Info: {transaction.originalName || transaction.name}. Call 1800...
+                Vp-ICICIB: Acct XX9012 debited for INR {Math.abs(transaction.amount).toLocaleString('en-IN')} on {transaction.date}. Info: {transaction.originalName || transaction.name} (Edited: {transaction.name}). Call 1800...
               </Text>
             </View>
           </View>
@@ -324,6 +354,9 @@ export default function TransactionDetailScreen() {
                 placeholder="Add a note..."
                 placeholderTextColor={colors.onSurfaceVariant}
                 multiline
+                selectionColor={colors.primary}
+                cursorColor={colors.primary}
+                underlineColorAndroid="transparent"
                 style={[styles.noteInput, {
                   color: colors.onSurface,
                   fontFamily: 'Manrope_400Regular',
@@ -335,24 +368,15 @@ export default function TransactionDetailScreen() {
 
               {/* Add Attachment Row */}
               <View style={[styles.attachRow, { marginTop: 12, borderTopWidth: 1, borderTopColor: colors.outlineVariant, paddingTop: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-                <TouchableOpacity 
-                    onPress={pickImage}
-                    style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
+                <TouchableOpacity
+                  onPress={pickImage}
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
                 >
-                    <Camera color={colors.onSurfaceVariant} size={20} />
-                    <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 14 }}>
-                        {attachment ? 'Change Attachment' : 'Add Attachment'}
-                    </Text>
+                  <Camera color={colors.onSurfaceVariant} size={20} />
+                  <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_500Medium', fontSize: 14 }}>
+                    {attachment ? 'Change Attachment' : 'Add Attachment'}
+                  </Text>
                 </TouchableOpacity>
-                
-                {/* Visual Thumbnail Placeholder */}
-                <View style={[styles.thumbBox, { backgroundColor: colors.surfaceContainerHigh, width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }]}>
-                    {attachment ? (
-                        <Image source={{ uri: attachment }} style={{ width: '100%', height: '100%' }} />
-                    ) : (
-                        <Paperclip color={colors.onSurfaceVariant} size={16} />
-                    )}
-                </View>
               </View>
             </View>
           </View>
@@ -384,106 +408,109 @@ export default function TransactionDetailScreen() {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
-                  <View style={[styles.modalHeader, { padding: spacing.lg }]}>
-                      <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
-                      <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Category</Text>
-                  </View>
-                  
-                  <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
-                      <View style={{ gap: 10 }}>
-                          {CATEGORIES.map(cat => {
-                              const catKey = cat.replace(' ', '');
-                              const CatIcon = IconMap[catKey] || ShoppingBag;
-                              return (
-                                  <TouchableOpacity 
-                                      key={cat}
-                                      onPress={() => {
-                                          setCategory(cat);
-                                          handleUpdate({ category: cat });
-                                          setShowCategoryModal(false);
-                                      }}
-                                      style={[styles.catOption, { 
-                                          backgroundColor: category === cat ? colors.primary : colors.surfaceContainerHighest,
-                                          padding: spacing.md,
-                                          borderRadius: 20,
-                                          flexDirection: 'row',
-                                          alignItems: 'center',
-                                          gap: 14
-                                      }]}
-                                  >
-                                      <View style={[styles.miniIconBox, { backgroundColor: category === cat ? 'rgba(255,255,255,0.2)' : colors.surfaceContainerLow, width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }]}>
-                                          <CatIcon color={category === cat ? colors.onPrimary : colors.primary} size={20} />
-                                      </View>
-                                      <Text style={{ flex: 1, color: category === cat ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }}>{cat}</Text>
-                                      {category === cat && <ChevronRight color={colors.onPrimary} size={18} />}
-                                  </TouchableOpacity>
-                              );
-                          })}
-                          
-                          {/* Custom Categories from state if any */}
-                          {category && !CATEGORIES.includes(category) && (
-                              <TouchableOpacity 
-                                  onPress={() => setShowCategoryModal(false)}
-                                  style={[styles.catOption, { 
-                                      backgroundColor: colors.primary,
-                                      padding: spacing.md,
-                                      borderRadius: 20,
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      gap: 14
-                                  }]}
-                              >
-                                  <View style={[styles.miniIconBox, { backgroundColor: 'rgba(255,255,255,0.2)', width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }]}>
-                                      <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>{category[0].toUpperCase()}</Text>
-                                  </View>
-                                  <Text style={{ flex: 1, color: colors.onPrimary, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }}>{category}</Text>
-                                  <ChevronRight color={colors.onPrimary} size={18} />
-                              </TouchableOpacity>
-                          )}
-                      </View>
-                      
-                      {/* Add New Category Input */}
-                      <View style={{ marginTop: 20, gap: 12 }}>
-                          <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }}>CREATE NEW</Text>
-                          <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                              <TextInput 
-                                  value={newCatName}
-                                  onChangeText={setNewCatName}
-                                  placeholder="Category name..."
-                                  placeholderTextColor={colors.onSurfaceVariant}
-                                  style={{ 
-                                      flex: 1, 
-                                      backgroundColor: colors.surfaceContainerHighest, 
-                                      borderRadius: 16, 
-                                      paddingHorizontal: 16, 
-                                      height: 56,
-                                      color: colors.onSurface, 
-                                      fontFamily: 'Manrope_500Medium' 
-                                  }}
-                              />
-                              <TouchableOpacity 
-                                  onPress={() => {
-                                      if (newCatName.trim()) {
-                                          setCategory(newCatName);
-                                          handleUpdate({ category: newCatName });
-                                          setShowCategoryModal(false);
-                                          setNewCatName('');
-                                      }
-                                  }}
-                                  style={{ 
-                                      backgroundColor: colors.primary, 
-                                      borderRadius: 16, 
-                                      width: 56,
-                                      height: 56,
-                                      alignItems: 'center',
-                                      justifyContent: 'center' 
-                                  }}
-                              >
-                                  <Plus color={colors.onPrimary} size={24} />
-                              </TouchableOpacity>
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Category</Text>
+                </View>
+
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {CATEGORIES.map(cat => {
+                      const catKey = cat.replace(' ', '');
+                      const CatIcon = IconMap[catKey] || ShoppingBag;
+                      return (
+                        <TouchableOpacity
+                          key={cat}
+                          onPress={() => {
+                            setCategory(cat);
+                            handleUpdate({ category: cat, iconName: getIconForCategory(cat) });
+                            setShowCategoryModal(false);
+                          }}
+                          style={[styles.catOption, {
+                            backgroundColor: category === cat ? colors.primary : colors.surfaceContainerHighest,
+                            padding: spacing.md,
+                            borderRadius: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 14
+                          }]}
+                        >
+                          <View style={[styles.miniIconBox, { backgroundColor: category === cat ? 'rgba(255,255,255,0.2)' : colors.surfaceContainerLow, width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }]}>
+                            <CatIcon color={category === cat ? colors.onPrimary : colors.primary} size={20} />
                           </View>
-                      </View>
-                  </ScrollView>
+                          <Text style={{ flex: 1, color: category === cat ? colors.onPrimary : colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }}>{cat}</Text>
+                          {category === cat && <ChevronRight color={colors.onPrimary} size={18} />}
+                        </TouchableOpacity>
+                      );
+                    })}
+
+                    {/* Custom Categories from state if any */}
+                    {category && !CATEGORIES.includes(category) && (
+                      <TouchableOpacity
+                        onPress={() => setShowCategoryModal(false)}
+                        style={[styles.catOption, {
+                          backgroundColor: colors.primary,
+                          padding: spacing.md,
+                          borderRadius: 20,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 14
+                        }]}
+                      >
+                        <View style={[styles.miniIconBox, { backgroundColor: 'rgba(255,255,255,0.2)', width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }]}>
+                          <Text style={{ color: colors.onPrimary, fontFamily: 'Manrope_700Bold', fontSize: 16 }}>{category[0].toUpperCase()}</Text>
+                        </View>
+                        <Text style={{ flex: 1, color: colors.onPrimary, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }}>{category}</Text>
+                        <ChevronRight color={colors.onPrimary} size={18} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  {/* Add New Category Input */}
+                  <View style={{ marginTop: 20, gap: 12 }}>
+                    <Text style={{ color: colors.onSurfaceVariant, fontFamily: 'Manrope_700Bold', fontSize: 11, letterSpacing: 1 }}>CREATE NEW</Text>
+                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                      <TextInput
+                        value={newCatName}
+                        onChangeText={setNewCatName}
+                        placeholder="Category name..."
+                        placeholderTextColor={colors.onSurfaceVariant}
+                        selectionColor={colors.primary}
+                        cursorColor={colors.primary}
+                        underlineColorAndroid="transparent"
+                        style={{
+                          flex: 1,
+                          backgroundColor: colors.surfaceContainerHighest,
+                          borderRadius: 16,
+                          paddingHorizontal: 16,
+                          height: 56,
+                          color: colors.onSurface,
+                          fontFamily: 'Manrope_500Medium'
+                        }}
+                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (newCatName.trim()) {
+                            setCategory(newCatName);
+                            handleUpdate({ category: newCatName, iconName: getIconForCategory(newCatName) });
+                            setShowCategoryModal(false);
+                            setNewCatName('');
+                          }
+                        }}
+                        style={{
+                          backgroundColor: colors.primary,
+                          borderRadius: 16,
+                          width: 56,
+                          height: 56,
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Plus color={colors.onPrimary} size={24} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </ScrollView>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -501,59 +528,59 @@ export default function TransactionDetailScreen() {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={[styles.modalContent, { backgroundColor: colors.surfaceContainerLow, borderTopLeftRadius: 32, borderTopRightRadius: 32 }]}>
-                  <View style={[styles.modalHeader, { padding: spacing.lg }]}>
-                      <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
-                      <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Group</Text>
-                  </View>
-                  
-                  <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
-                      <View style={{ gap: 10 }}>
-                          {groups.map(group => (
-                              <TouchableOpacity 
-                                  key={group.id}
-                                  onPress={() => {
-                                      setSelectedGroup(group);
-                                      setShowGroupModal(false);
-                                  }}
-                                  style={[styles.groupOption, { 
-                                      backgroundColor: colors.surfaceContainerHighest,
-                                      padding: spacing.md,
-                                      borderRadius: 20,
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      gap: 14
-                                  }]}
-                              >
-                                  <View style={[styles.groupIconBox, { backgroundColor: group.bgColor || colors.primaryContainer, width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }]}>
-                                      <Text style={{ fontSize: 20 }}>{group.emoji || '👥'}</Text>
-                                  </View>
-                                  <View style={{ flex: 1 }}>
-                                      <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>{group.name}</Text>
-                                      <Text style={{ color: colors.onSurfaceVariant, fontSize: 12 }}>{group.members} Members</Text>
-                                  </View>
-                                  <ChevronRight color={colors.onSurfaceVariant} size={18} />
-                              </TouchableOpacity>
-                          ))}
-                      </View>
-                      
-                      <TouchableOpacity 
-                          style={[styles.createGroupAction, { 
-                              marginTop: 20, 
-                              borderWidth: 1, 
-                              borderColor: colors.outlineVariant, 
-                              borderStyle: 'dashed',
-                              borderRadius: 16,
-                              padding: 16,
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: 10
-                          }]}
+                <View style={[styles.modalHeader, { padding: spacing.lg }]}>
+                  <View style={[styles.modalDrag, { backgroundColor: colors.outlineVariant }]} />
+                  <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_700Bold', fontSize: 20, textAlign: 'center', marginTop: 10 }}>Select Group</Text>
+                </View>
+
+                <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: 40 }}>
+                  <View style={{ gap: 10 }}>
+                    {groups.map(group => (
+                      <TouchableOpacity
+                        key={group.id}
+                        onPress={() => {
+                          setSelectedGroup(group);
+                          setShowGroupModal(false);
+                        }}
+                        style={[styles.groupOption, {
+                          backgroundColor: colors.surfaceContainerHighest,
+                          padding: spacing.md,
+                          borderRadius: 20,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: 14
+                        }]}
                       >
-                          <Plus color={colors.primary} size={20} />
-                          <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 14 }}>Create New Group</Text>
+                        <View style={[styles.groupIconBox, { backgroundColor: group.bgColor || colors.primaryContainer, width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }]}>
+                          <Text style={{ fontSize: 20 }}>{group.emoji || '👥'}</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <Text style={{ color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 16 }}>{group.name}</Text>
+                          <Text style={{ color: colors.onSurfaceVariant, fontSize: 12 }}>{group.members} Members</Text>
+                        </View>
+                        <ChevronRight color={colors.onSurfaceVariant} size={18} />
                       </TouchableOpacity>
-                  </ScrollView>
+                    ))}
+                  </View>
+
+                  <TouchableOpacity
+                    style={[styles.createGroupAction, {
+                      marginTop: 20,
+                      borderWidth: 1,
+                      borderColor: colors.outlineVariant,
+                      borderStyle: 'dashed',
+                      borderRadius: 16,
+                      padding: 16,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10
+                    }]}
+                  >
+                    <Plus color={colors.primary} size={20} />
+                    <Text style={{ color: colors.primary, fontFamily: 'Manrope_700Bold', fontSize: 14 }}>Create New Group</Text>
+                  </TouchableOpacity>
+                </ScrollView>
               </View>
             </TouchableWithoutFeedback>
           </View>

@@ -1,24 +1,42 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../src/theme/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck, Globe } from 'lucide-react-native';
+import { User, Bell, BarChart2, ArrowRight, Plus, Utensils, Coffee, Car, ShoppingBag, Monitor, Home, Activity, CircleDollarSign, ShieldCheck, Globe, Zap, Plane, Heart, Tv, ShoppingCart } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useTransactions } from '../../src/context/TransactionContext';
 import { smsService } from '../../src/services/smsService';
 
 const IconMap: Record<string, any> = {
-  Coffee,
-  Car,
-  ShoppingBag,
-  Utensils,
-  Monitor,
-  Home,
-  Activity,
-  CircleDollarSign,
-  ShoppingCart: ShoppingBag,
-  Zap: Activity,
-  Plane: Activity,
-  Globe,
+  'Coffee': Coffee,
+  'Car': Car,
+  'ShoppingBag': ShoppingBag,
+  'Utensils': Utensils,
+  'Monitor': Monitor,
+  'Home': Home,
+  'Activity': Activity,
+  'CircleDollarSign': CircleDollarSign,
+  'Zap': Zap,
+  'Plane': Plane,
+  'Globe': Globe,
+  'ShoppingCart': ShoppingBag,
+  'Heart': Heart,
+  'Tv': Tv,
+  'DiningOut': Utensils,
+  'DiningOutIcon': Utensils,
+  'Shopping': ShoppingBag,
+  'ShoppingIcon': ShoppingBag,
+  'Transport': Car,
+  'TransportIcon': Car,
+  'Utilities': Zap,
+  'UtilitiesIcon': Zap,
+  'Travel': Plane,
+  'TravelIcon': Plane,
+  'Electronics': Monitor,
+  'ElectronicsIcon': Monitor,
+  'Entertainment': Tv,
+  'EntertainmentIcon': Tv,
+  'Health': Heart,
+  'General': CircleDollarSign
 };
 
 export default function DashboardScreen() {
@@ -260,7 +278,7 @@ export default function DashboardScreen() {
                         <IconComponent color={colors.onSurfaceVariant} size={20} />
                       </View>
                       <View style={styles.txInfo}>
-                        <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name}</Text>
+                        <Text style={[styles.txName, { color: colors.onSurface, fontFamily: 'Manrope_600SemiBold', fontSize: 15 }]}>{tx.name || tx.originalName}</Text>
                         <Text style={[styles.txMeta, { color: colors.onSurfaceVariant, fontSize: 12, marginTop: 2 }]}>{tx.category} • {tx.date}</Text>
                       </View>
                       <View style={styles.txAmounts}>

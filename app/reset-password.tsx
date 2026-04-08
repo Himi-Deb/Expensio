@@ -49,6 +49,9 @@ export default function ResetPasswordScreen() {
                   placeholderTextColor={colors.surfaceContainerHighest}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  selectionColor={colors.primary}
+                  cursorColor={colors.primary}
+                  underlineColorAndroid="transparent"
                 />
               </View>
             </View>

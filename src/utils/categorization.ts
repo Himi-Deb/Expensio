@@ -63,3 +63,17 @@ export function autoCategorizeTransaction(merchantName: string): CategoryResult 
   // Default fallback if no intelligent match is found
   return { category: 'General', iconName: 'CircleDollarSign' };
 }
+export function getIconForCategory(category: string): TransactionIcon {
+  const cat = category.toLowerCase().trim();
+  if (cat.includes('din') || cat.includes('eat') || cat.includes('food')) return 'Utensils';
+  if (cat.includes('shop') || cat.includes('buy') || cat.includes('store')) return 'ShoppingBag';
+  if (cat.includes('coff') || cat.includes('drink')) return 'Coffee';
+  if (cat.includes('trans') || cat.includes('cab') || cat.includes('ride') || cat.includes('uber')) return 'Car';
+  if (cat.includes('util') || cat.includes('bill') || cat.includes('zap')) return 'Zap';
+  if (cat.includes('trav') || cat.includes('flight') || cat.includes('plane')) return 'Plane';
+  if (cat.includes('elect') || cat.includes('tech') || cat.includes('gadget')) return 'Monitor';
+  if (cat.includes('groc') || cat.includes('home')) return 'Home';
+  if (cat.includes('heal') || cat.includes('doc') || cat.includes('med')) return 'Activity';
+  
+  return 'CircleDollarSign';
+}
